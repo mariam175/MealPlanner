@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">DailyMenu</string>
+    <string name="login">LogIn</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="signup">Sign Up</string>
+    <string name="confirmPass">Confirm Password</string>
+    <string name="createAccount">Create Account</string>
+    <string name="have_acc">Already have an account</string>
+    <string name="clientId">683155729378-5gso7f4b7rkpkm14b2m5heeruav65bd7.apps.googleusercontent.com</string>
 </resources>
