@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "683155729378",
+    "project_id": "dailymenu-712f9",
+    "storage_bucket": "dailymenu-712f9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:683155729378:android:d9451e87e32e67c85b67bb",
+        "android_client_info": {
+          "package_name": "com.example.dailymenu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "683155729378-5gso7f4b7rkpkm14b2m5heeruav65bd7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4p2tvAi2hepzrR3y-IjNSpxl9YGDPcPc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "683155729378-5gso7f4b7rkpkm14b2m5heeruav65bd7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
