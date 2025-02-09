@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
@@ -27,6 +28,7 @@ public class Home extends AppCompatActivity {
     TextView mealName;
     ImageView mealImage;
     Meal meal;
+    RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +36,7 @@ public class Home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         mealName = findViewById(R.id.tv_meal_name);
         mealImage = findViewById(R.id.iv_meal_img);
+        recyclerView = findViewById(R.id.rv_catigories);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -64,9 +67,28 @@ public class Home extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Home.this , MealDetails.class);
-                intent.putExtra("meal" , meal);
+                intent.putExtra("meal" , meal.getIdMeal());
                 startActivity(intent);
             }
         });
+        CatigoryServices catigoryServices = retrofit.create(CatigoryServices.class);
+        Call<CatigoryResponse> callCati = catigoryServices.getAllCatigories();
+       callCati.enqueue(new Callback<CatigoryResponse>() {
+           @Override
+           public void onResponse(Call<CatigoryResponse> call, Response<CatigoryResponse> response) {
+               if (response.isSuccessful())
+               {
+                   CatigoryResponse catigoryResponse = response.body();
+                   List<Catigory>catigoriesList = catigoryResponse.getCatigoryList();
+                   CatigoriesRecycleView catigoriesRecycleView = new CatigoriesRecycleView(Home.this , catigoriesList.toArray(new Catigory[0]));
+                   recyclerView.setAdapter(catigoriesRecycleView);
+               }
+           }
+
+           @Override
+           public void onFailure(Call<CatigoryResponse> call, Throwable throwable) {
+                throwable.printStackTrace();
+           }
+       });
     }
 }

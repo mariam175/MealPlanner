@@ -1,8 +1,7 @@
 package com.example.dailymenu;
 
-import java.io.Serializable;
 
-public class Meal implements Serializable {
+public class Meal {
     private String strMeal;
     private String idMeal;
     private String strArea;

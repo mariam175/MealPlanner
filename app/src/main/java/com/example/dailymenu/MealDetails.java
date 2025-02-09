@@ -3,6 +3,7 @@ package com.example.dailymenu;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -29,13 +30,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class MealDetails extends AppCompatActivity {
     TextView instr;
     ImageView img;
-    Meal meal;
+    String id;
     RecyclerView recyclerView;
+    Meal meal;
   TextView area;
     List<IngridentItem> ingridentItemList;
+    static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,32 +56,59 @@ public class MealDetails extends AppCompatActivity {
         recyclerView = findViewById(R.id.rv_ingrediants);
         area = findViewById(R.id.tv_area);
         Intent incoming = getIntent();
-        meal = (Meal) incoming.getSerializableExtra("meal");
-        instr.setText(meal.getStrInstructions());
-        area.setText(meal.getStrArea());
+        id = incoming.getStringExtra("meal");
 
-        YouTubePlayerView youtubePlayerView = findViewById(R.id.youtube_player_view);
-        getLifecycle().addObserver(youtubePlayerView);
-
-        String videoId = extractVideoId(meal.getStrYoutube());
-
-        youtubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MealsServices mealsServices = retrofit.create(MealsServices.class);
+        Call<MealsResponse> call = mealsServices.getMealById(id);
+        Log.i("TAG2", "onResponse: " + id);
+        call.enqueue(new Callback<MealsResponse>() {
             @Override
-            public void onReady(YouTubePlayer youTubePlayer) {
+            public void onResponse(Call<MealsResponse> call, Response<MealsResponse> response) {
+                if (response.isSuccessful())
+                {
+                    MealsResponse mealsResponse = response.body();
+                    List<Meal> meals = mealsResponse.getMeals();
+                    meal = meals.get(0);
+                    instr.setText(meal.getStrInstructions());
+                    area.setText(meal.getStrArea());
 
-                youTubePlayer.cueVideo(videoId, 0);
-                youtubePlayerView.setOnClickListener(v -> youTubePlayer.play());
+                    YouTubePlayerView youtubePlayerView = findViewById(R.id.youtube_player_view);
+                    getLifecycle().addObserver(youtubePlayerView);
+
+                    String videoId = extractVideoId(meal.getStrYoutube());
+
+                    youtubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
+                        @Override
+                        public void onReady(YouTubePlayer youTubePlayer) {
+
+                            youTubePlayer.cueVideo(videoId, 0);
+                            youtubePlayerView.setOnClickListener(v -> youTubePlayer.play());
+                        }
+                    });
+
+                    Glide.with(MealDetails.this)
+                            .load(meal.getStrMealThumb())
+                            .apply(new RequestOptions().override(300 , 300))
+                            .into(img);
+                    getIngrediants(meal);
+                    IngredientRecycleView myRecyleView = new IngredientRecycleView(MealDetails.this , ingridentItemList.toArray(new IngridentItem[0]));
+                    recyclerView.setLayoutManager(new LinearLayoutManager(MealDetails.this));
+                    recyclerView.setAdapter(myRecyleView);
+                    Log.i("TAG2", "onResponse: " + meals.size());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MealsResponse> call, Throwable throwable) {
+                throwable.printStackTrace();
+                Log.i("TAG2", "onResponse: fail" );
             }
         });
 
-        Glide.with(this)
-                .load(meal.getStrMealThumb())
-                .apply(new RequestOptions().override(300 , 300))
-                .into(img);
-        getIngrediants(meal);
-        IngredientRecycleView myRecyleView = new IngredientRecycleView(this , ingridentItemList.toArray(new IngridentItem[0]));
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(myRecyleView);
 
     }
     void  getIngrediants(Meal meal)
