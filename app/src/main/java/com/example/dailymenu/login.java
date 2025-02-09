@@ -77,6 +77,8 @@ public class login extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         Toast.makeText(login.this, "Login Successfully", Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(login.this , Home.class));
+                                        finish();
                                     } else {
 
                                         Toast.makeText(login.this, "Email or Password incorrect",
@@ -116,6 +118,8 @@ public class login extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if(task.isSuccessful()){
                                     Toast.makeText(login.this, "Login Successfully", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(login.this , Home.class));
+                                    finish();
 
                                 }else {
                                     Toast.makeText(login.this, "There is Problem Try Again", Toast.LENGTH_SHORT).show();

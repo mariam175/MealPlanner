@@ -8,4 +8,6 @@
     <string name="createAccount">Create Account</string>
     <string name="have_acc">Already have an account</string>
     <string name="clientId">683155729378-5gso7f4b7rkpkm14b2m5heeruav65bd7.apps.googleusercontent.com</string>
+    <string name="dayMeal">Meal of the day</string>
+    <string name="country">Country</string>
 </resources>
