@@ -9,4 +9,6 @@ public interface MealsServices {
     Call<MealsResponse>getRandomMeals();
    @GET("lookup.php")
     Call<MealsResponse>getMealById(@Query("i")String i);
+   @GET("list.php?a=list")
+    Call<AreaResponse>getAreas();
 }

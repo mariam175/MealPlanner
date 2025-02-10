@@ -28,7 +28,7 @@ public class Home extends AppCompatActivity {
     TextView mealName;
     ImageView mealImage;
     Meal meal;
-    RecyclerView recyclerView;
+    RecyclerView recyclerView , areaRecycler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +37,7 @@ public class Home extends AppCompatActivity {
         mealName = findViewById(R.id.tv_meal_name);
         mealImage = findViewById(R.id.iv_meal_img);
         recyclerView = findViewById(R.id.rv_catigories);
+        areaRecycler = findViewById(R.id.rv_areas);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -90,5 +91,25 @@ public class Home extends AppCompatActivity {
                 throwable.printStackTrace();
            }
        });
+        MealsServices areaServices = retrofit.create(MealsServices.class);
+        Call<AreaResponse> callArea = areaServices.getAreas();
+        callArea.enqueue(new Callback<AreaResponse>() {
+
+            @Override
+            public void onResponse(Call<AreaResponse> call, Response<AreaResponse> response) {
+                if (response.isSuccessful())
+                {
+                    AreaResponse areaResponse = response.body();
+                    List<Area>areasList = areaResponse.getMeals();
+                    AreaRecycleView areasRecycleView = new AreaRecycleView(Home.this , areasList.toArray(new Area[0]));
+                    areaRecycler.setAdapter(areasRecycleView);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AreaResponse> call, Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        });
     }
 }
