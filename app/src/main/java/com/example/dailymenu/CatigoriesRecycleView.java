@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,13 +35,16 @@ public class CatigoriesRecycleView extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Catigory currentCatigory = catigories[position];
+        holder.catigoryName.setText(currentCatigory.getStrCategory());
         Glide.with(context).load(currentCatigory.getStrCategoryThumb())
                 .apply(new RequestOptions().override(300 , 300))
+                .apply(RequestOptions.circleCropTransform())
                 .into(holder.catigoryImage);
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context , Meals.class);
+                intent.putExtra("Type" , "catigory");
                 intent.putExtra("Catigory" , currentCatigory.getStrCategory());
                 context.startActivity(intent);
             }
@@ -56,9 +60,11 @@ class ViewHolder extends RecyclerView.ViewHolder
 {
     View view;
     ImageView catigoryImage;
+    TextView catigoryName;
     public ViewHolder(@NonNull View itemView) {
         super(itemView);
         view = itemView;
         catigoryImage = itemView.findViewById(R.id.iv_catigory);
+        catigoryName = itemView.findViewById(R.id.tv_cat_name);
     }
 }

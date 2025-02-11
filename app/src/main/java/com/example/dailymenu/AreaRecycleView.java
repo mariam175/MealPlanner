@@ -36,6 +36,7 @@ public class AreaRecycleView extends RecyclerView.Adapter<areaViewHolder> {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context , Meals.class);
+                intent.putExtra("Type" , "area");
                 intent.putExtra("Area" , current.getStrArea());
                 context.startActivity(intent);
             }

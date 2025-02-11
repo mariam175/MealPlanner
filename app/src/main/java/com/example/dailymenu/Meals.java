@@ -21,6 +21,7 @@ public class Meals extends AppCompatActivity {
     TextView Option;
     RecyclerView recyclerView;
     static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";
+    String type;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,14 +30,24 @@ public class Meals extends AppCompatActivity {
         Option = findViewById(R.id.tv_meals_relation);
         recyclerView = findViewById(R.id.rv_meals);
         Intent income = getIntent();
-        String rel = income.getStringExtra("Catigory");
-        Option.setText(rel);
+        type = income.getStringExtra("Type");
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        MealsFilterServices mealsFilterServices = retrofit.create(MealsFilterServices.class);
-        Call<MealsFilterResponse> call = mealsFilterServices.getMealsByCatigory(rel);
+        MealsServices mealsServices = retrofit.create(MealsServices.class);
+        Call<MealsFilterResponse> call = null;
+       if (type.equals("area"))
+       {
+           String rel = income.getStringExtra("Area");
+           call = mealsServices.getMealsByArea(rel);
+       }
+       else  if (type.equals("catigory"))
+       {
+           String rel = income.getStringExtra("Catigory");
+           call = mealsServices.getMealsByCatigory(rel);
+       }
         call.enqueue(new Callback<MealsFilterResponse>() {
             @Override
             public void onResponse(Call<MealsFilterResponse> call, Response<MealsFilterResponse> response) {

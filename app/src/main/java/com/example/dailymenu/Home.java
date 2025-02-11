@@ -72,8 +72,8 @@ public class Home extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        CatigoryServices catigoryServices = retrofit.create(CatigoryServices.class);
-        Call<CatigoryResponse> callCati = catigoryServices.getAllCatigories();
+
+        Call<CatigoryResponse> callCati = mealsServices.getAllCatigories();
        callCati.enqueue(new Callback<CatigoryResponse>() {
            @Override
            public void onResponse(Call<CatigoryResponse> call, Response<CatigoryResponse> response) {
@@ -91,8 +91,8 @@ public class Home extends AppCompatActivity {
                 throwable.printStackTrace();
            }
        });
-        MealsServices areaServices = retrofit.create(MealsServices.class);
-        Call<AreaResponse> callArea = areaServices.getAreas();
+
+        Call<AreaResponse> callArea = mealsServices.getAreas();
         callArea.enqueue(new Callback<AreaResponse>() {
 
             @Override

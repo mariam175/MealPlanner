@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,8 +37,10 @@ public class MealsRecycleView extends RecyclerView.Adapter<MealsViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MealsViewHolder holder, int position) {
         MealsFilter current = mealsFilters[position];
+        holder.name.setText(current.getStrMeal());
         Glide.with(context).load(current.getStrMealThumb())
-                .apply(new RequestOptions().override(600 , 300))
+                .apply(new RequestOptions().override(200 , 200))
+                .apply(RequestOptions.circleCropTransform())
                 .into(holder.img);
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,9 +61,11 @@ class MealsViewHolder extends RecyclerView.ViewHolder
 {
     View view;
     ImageView img;
+    TextView name;
     public MealsViewHolder(@NonNull View itemView) {
         super(itemView);
        view = itemView;
         img = itemView.findViewById(R.id.iv_meal_item);
+        name = itemView.findViewById(R.id.tv_card_meal_name);
     }
 }
