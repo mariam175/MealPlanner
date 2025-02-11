@@ -96,7 +96,6 @@ public class MealDetails extends AppCompatActivity {
                             .into(img);
                     getIngrediants(meal);
                     IngredientRecycleView myRecyleView = new IngredientRecycleView(MealDetails.this , ingridentItemList.toArray(new IngridentItem[0]));
-                    recyclerView.setLayoutManager(new LinearLayoutManager(MealDetails.this));
                     recyclerView.setAdapter(myRecyleView);
                     Log.i("TAG2", "onResponse: " + meals.size());
                 }

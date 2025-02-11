@@ -1,6 +1,8 @@
 package com.example.dailymenu;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -37,6 +39,7 @@ public class login extends AppCompatActivity {
     ImageButton google;
     private FirebaseAuth mAuth;
     private GoogleSignInClient client;
+    TextView skip;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +50,7 @@ public class login extends AppCompatActivity {
         login = findViewById(R.id.btn_login);
         create_acc = findViewById(R.id.tv_create_account);
         google = findViewById(R.id.btn_go);
+        skip = findViewById(R.id.skip);
         mAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.clientId))
@@ -101,6 +105,16 @@ public class login extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = client.getSignInIntent();
                 startActivityForResult(i,123);
+            }
+        });
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences sharedPreferences = getSharedPreferences("Logged" , Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("isLogin" , false);
+                editor.commit();
+                startActivity(new Intent(login.this , Home.class));
             }
         });
     }
