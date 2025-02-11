@@ -13,10 +13,13 @@ public interface MealsServices {
     Call<AreaResponse>getAreas();
     @GET("categories.php")
     Call<CatigoryResponse> getAllCatigories();
+    @GET("list.php?i=list")
+    Call<IngrediantResponse>getAllIngrediants();
     @GET("filter.php")
     Call<MealsFilterResponse> getMealsByCatigory(@Query("c")String c);
     @GET("filter.php")
     Call<MealsFilterResponse> getMealsByArea(@Query("a")String a);
     @GET("filter.php")
     Call<MealsFilterResponse> getMealsByIngrediants(@Query("i")String i);
+
 }
