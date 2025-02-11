@@ -18,7 +18,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Meals extends AppCompatActivity {
-    TextView Option;
+
     RecyclerView recyclerView;
     static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";
     String type;
@@ -27,7 +27,7 @@ public class Meals extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_meals);
-        Option = findViewById(R.id.tv_meals_relation);
+
         recyclerView = findViewById(R.id.rv_meals);
         Intent income = getIntent();
         type = income.getStringExtra("Type");
@@ -38,15 +38,20 @@ public class Meals extends AppCompatActivity {
                 .build();
         MealsServices mealsServices = retrofit.create(MealsServices.class);
         Call<MealsFilterResponse> call = null;
+        String rel;
        if (type.equals("area"))
        {
-           String rel = income.getStringExtra("Area");
+            rel = income.getStringExtra("Area");
            call = mealsServices.getMealsByArea(rel);
        }
        else  if (type.equals("catigory"))
        {
-           String rel = income.getStringExtra("Catigory");
+            rel = income.getStringExtra("Catigory");
            call = mealsServices.getMealsByCatigory(rel);
+       }
+       else {
+           rel = income.getStringExtra("Ingrediant");
+           call = mealsServices.getMealsByIngrediants(rel);
        }
         call.enqueue(new Callback<MealsFilterResponse>() {
             @Override

@@ -28,7 +28,7 @@ public class Home extends AppCompatActivity {
     TextView mealName;
     ImageView mealImage;
     Meal meal;
-    RecyclerView recyclerView , areaRecycler;
+    RecyclerView recyclerView , areaRecycler , ingrediantRecycler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +38,7 @@ public class Home extends AppCompatActivity {
         mealImage = findViewById(R.id.iv_meal_img);
         recyclerView = findViewById(R.id.rv_catigories);
         areaRecycler = findViewById(R.id.rv_areas);
+        ingrediantRecycler = findViewById(R.id.rv_ing);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -108,6 +109,24 @@ public class Home extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<AreaResponse> call, Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        });
+        Call<IngrediantResponse>ingreCall = mealsServices.getAllIngrediants();
+        ingreCall.enqueue(new Callback<IngrediantResponse>() {
+            @Override
+            public void onResponse(Call<IngrediantResponse> call, Response<IngrediantResponse> response) {
+                if (response.isSuccessful())
+                {
+                    IngrediantResponse ingrediantResponse = response.body();
+                    List<Ingredient> ingredients = ingrediantResponse.getMeals();
+                    AllIngrediantsRecyclerView allIngrediantsRecyclerView = new AllIngrediantsRecyclerView(Home.this , ingredients.toArray(new Ingredient[0]));
+                    ingrediantRecycler.setAdapter(allIngrediantsRecyclerView);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<IngrediantResponse> call, Throwable throwable) {
                 throwable.printStackTrace();
             }
         });
