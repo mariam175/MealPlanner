@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -44,10 +45,13 @@ public class AllIngrediantsRecyclerView extends RecyclerView.Adapter<allIngredia
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context , Meals.class);
-                intent.putExtra("Type" , "ingrediant");
-                intent.putExtra("Ingrediant" , current.getStrIngredient());
-                context.startActivity(intent);
+//                Intent intent = new Intent(context , Meals.class);
+//                intent.putExtra("Type" , "ingrediant");
+//                intent.putExtra("Ingrediant" , current.getStrIngredient());
+//                context.startActivity(intent);
+                HomeFragmentDirections.ActionHomeFragmentToMealsFragment action =
+                        HomeFragmentDirections.actionHomeFragmentToMealsFragment("ingrediant" , current.getStrIngredient());
+                Navigation.findNavController(view).navigate(action);
             }
         });
     }

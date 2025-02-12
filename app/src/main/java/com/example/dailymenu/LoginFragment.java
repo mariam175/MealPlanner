@@ -1,24 +1,24 @@
 package com.example.dailymenu;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Patterns;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -32,7 +32,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class login extends AppCompatActivity {
+public class LoginFragment extends Fragment {
+
     EditText email , pass;
     Button login;
     TextView create_acc;
@@ -40,23 +41,37 @@ public class login extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private GoogleSignInClient client;
     TextView skip;
+    public LoginFragment() {
+        // Required empty public constructor
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_login);
-        email = findViewById(R.id.et_log_email);
-        pass = findViewById(R.id.et_log_pass);
-        login = findViewById(R.id.btn_login);
-        create_acc = findViewById(R.id.tv_create_account);
-        google = findViewById(R.id.btn_go);
-        skip = findViewById(R.id.skip);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_login, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        email = view.findViewById(R.id.et_log_email);
+        pass = view.findViewById(R.id.et_log_pass);
+        login = view.findViewById(R.id.btn_login);
+        create_acc = view.findViewById(R.id.tv_create_account);
+        google = view.findViewById(R.id.btn_go);
+        skip = view.findViewById(R.id.skip);
         mAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.clientId))
                 .requestEmail()
                 .build();
-        client = GoogleSignIn.getClient(this,options);
+        client = GoogleSignIn.getClient(requireContext(),options);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,16 +91,17 @@ public class login extends AppCompatActivity {
                 }
                 else {
                     mAuth.signInWithEmailAndPassword(emailStr, passStr)
-                            .addOnCompleteListener(login.this, new OnCompleteListener<AuthResult>() {
+                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        Toast.makeText(login.this, "Login Successfully", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(login.this , Home.class));
-                                        finish();
+                                        Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_homeFragment);
+                                        Toast.makeText(requireContext(), "Login Successfully", Toast.LENGTH_SHORT).show();
+
+
                                     } else {
 
-                                        Toast.makeText(login.this, "Email or Password incorrect",
+                                        Toast.makeText(requireContext(), "Email or Password incorrect",
                                                 Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -97,7 +113,8 @@ public class login extends AppCompatActivity {
         create_acc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(login.this , signup.class));
+               // startActivity(new Intent(requireContext() , signup.class));
+                Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_signupFragment);
             }
         });
         google.setOnClickListener(new View.OnClickListener() {
@@ -110,15 +127,16 @@ public class login extends AppCompatActivity {
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences sharedPreferences = getSharedPreferences("Logged" , Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Logged" , Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("isLogin" , false);
                 editor.commit();
-
+//                startActivity(new Intent(requireContext() , Home.class));
+                Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeFragment);
             }
         });
     }
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 123){
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -131,12 +149,12 @@ public class login extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if(task.isSuccessful()){
-                                    Toast.makeText(login.this, "Login Successfully", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(login.this , Home.class));
-                                    finish();
+                                    Toast.makeText(requireContext(), "Login Successfully", Toast.LENGTH_SHORT).show();
+                                    Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_homeFragment);
+
 
                                 }else {
-                                    Toast.makeText(login.this, "There is Problem Try Again", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(requireContext(), "There is Problem Try Again", Toast.LENGTH_SHORT).show();
                                 }
 
                             }

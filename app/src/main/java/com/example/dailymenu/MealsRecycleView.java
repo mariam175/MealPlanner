@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -45,9 +46,12 @@ public class MealsRecycleView extends RecyclerView.Adapter<MealsViewHolder> {
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context , MealDetails.class);
-                intent.putExtra("meal" ,current.getIdMeal());
-                context.startActivity(intent);
+//                Intent intent = new Intent(context , MealDetails.class);
+//                intent.putExtra("meal" ,current.getIdMeal());
+//                context.startActivity(intent);
+                MealsFragmentDirections.ActionMealsFragmentToMealDetailsFragment action =
+                        MealsFragmentDirections.actionMealsFragmentToMealDetailsFragment(current.getIdMeal());
+                Navigation.findNavController(view).navigate(action);
             }
         });
     }
