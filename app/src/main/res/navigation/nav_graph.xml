@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.dailymenu.LoginFragment"
+        android:label="LoginFragment" >
+        <action
+            android:id="@+id/action_loginFragment_to_signupFragment"
+            app:destination="@id/signupFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signupFragment"
+        android:name="com.example.dailymenu.SignupFragment"
+        android:label="SignupFragment" >
+        <action
+            android:id="@+id/action_signupFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.dailymenu.HomeFragment"
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_mealDetailsFragment"
+            app:destination="@id/mealDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_mealsFragment"
+            app:destination="@id/mealsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mealDetailsFragment"
+        android:name="com.example.dailymenu.MealDetailsFragment"
+        android:label="MealDetailsFragment" >
+        <argument
+            android:name="mealId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/mealsFragment"
+        android:name="com.example.dailymenu.MealsFragment"
+        android:label="MealsFragment" >
+        <action
+            android:id="@+id/action_mealsFragment_to_mealDetailsFragment"
+            app:destination="@id/mealDetailsFragment" />
+        <argument
+            android:name="type"
+            app:argType="string" />
+        <argument
+            android:name="rel"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.dailymenu.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/favouritesFragment"
+        android:name="com.example.dailymenu.FavouritesFragment"
+        android:label="fragment_favourites"
+        tools:layout="@layout/fragment_favourites" />
+    <fragment
+        android:id="@+id/calenderFragment"
+        android:name="com.example.dailymenu.CalenderFragment"
+        android:label="fragment_calender"
+        tools:layout="@layout/fragment_calender" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.dailymenu.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+</navigation>

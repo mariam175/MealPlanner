@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class AreaRecycleView extends RecyclerView.Adapter<areaViewHolder> {
@@ -35,10 +36,13 @@ public class AreaRecycleView extends RecyclerView.Adapter<areaViewHolder> {
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context , Meals.class);
-                intent.putExtra("Type" , "area");
-                intent.putExtra("Area" , current.getStrArea());
-                context.startActivity(intent);
+//                Intent intent = new Intent(context , Meals.class);
+//                intent.putExtra("Type" , "area");
+//                intent.putExtra("Area" , current.getStrArea());
+//                context.startActivity(intent);
+                HomeFragmentDirections.ActionHomeFragmentToMealsFragment action =
+                        HomeFragmentDirections.actionHomeFragmentToMealsFragment("area" , current.getStrArea());
+                Navigation.findNavController(view).navigate(action);
             }
         });
     }

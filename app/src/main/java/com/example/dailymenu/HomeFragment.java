@@ -2,18 +2,21 @@ package com.example.dailymenu;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
@@ -23,22 +26,41 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class Home extends AppCompatActivity {
+
+public class HomeFragment extends Fragment {
+
     static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";
     TextView mealName;
     ImageView mealImage;
     Meal meal;
     RecyclerView recyclerView , areaRecycler , ingrediantRecycler;
+    public HomeFragment() {
+        // Required empty public constructor
+    }
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_home);
-        mealName = findViewById(R.id.tv_meal_name);
-        mealImage = findViewById(R.id.iv_meal_img);
-        recyclerView = findViewById(R.id.rv_catigories);
-        areaRecycler = findViewById(R.id.rv_areas);
-        ingrediantRecycler = findViewById(R.id.rv_ing);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.activity_home, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mealName = view.findViewById(R.id.tv_meal_name);
+        mealImage = view.findViewById(R.id.iv_meal_img);
+        recyclerView = view.findViewById(R.id.rv_catigories);
+        areaRecycler = view.findViewById(R.id.rv_areas);
+        ingrediantRecycler = view.findViewById(R.id.rv_ing);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -52,9 +74,9 @@ public class Home extends AppCompatActivity {
                 {
                     MealsResponse mealsResponse = response.body();
                     List<Meal> meals = mealsResponse.getMeals();
-                     meal = meals.get(0);
+                    meal = meals.get(0);
                     mealName.setText(meal.getStrMeal());
-                    Glide.with(Home.this)
+                    Glide.with(requireContext())
                             .load(meal.getStrMealThumb())
                             .into(mealImage);
                 }
@@ -68,30 +90,33 @@ public class Home extends AppCompatActivity {
         mealName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Home.this , MealDetails.class);
-                intent.putExtra("meal" , meal.getIdMeal());
-                startActivity(intent);
+//                Intent intent = new Intent(requireContext(), MealDetails.class);
+//                intent.putExtra("meal" , meal.getIdMeal());
+//                startActivity(intent);
+                HomeFragmentDirections.ActionHomeFragmentToMealDetailsFragment action =
+                        HomeFragmentDirections.actionHomeFragmentToMealDetailsFragment(meal.getIdMeal());
+                Navigation.findNavController(view).navigate(action);
             }
         });
 
         Call<CatigoryResponse> callCati = mealsServices.getAllCatigories();
-       callCati.enqueue(new Callback<CatigoryResponse>() {
-           @Override
-           public void onResponse(Call<CatigoryResponse> call, Response<CatigoryResponse> response) {
-               if (response.isSuccessful())
-               {
-                   CatigoryResponse catigoryResponse = response.body();
-                   List<Catigory>catigoriesList = catigoryResponse.getCatigoryList();
-//                   CatigoriesRecycleView catigoriesRecycleView = new CatigoriesRecycleView(Home.this , catigoriesList.toArray(new Catigory[0]) , getView());
-//                   recyclerView.setAdapter(catigoriesRecycleView);
-               }
-           }
+        callCati.enqueue(new Callback<CatigoryResponse>() {
+            @Override
+            public void onResponse(Call<CatigoryResponse> call, Response<CatigoryResponse> response) {
+                if (response.isSuccessful())
+                {
+                    CatigoryResponse catigoryResponse = response.body();
+                    List<Catigory>catigoriesList = catigoryResponse.getCatigoryList();
+                    CatigoriesRecycleView catigoriesRecycleView = new CatigoriesRecycleView(requireContext() , catigoriesList.toArray(new Catigory[0]) , getView());
+                    recyclerView.setAdapter(catigoriesRecycleView);
+                }
+            }
 
-           @Override
-           public void onFailure(Call<CatigoryResponse> call, Throwable throwable) {
+            @Override
+            public void onFailure(Call<CatigoryResponse> call, Throwable throwable) {
                 throwable.printStackTrace();
-           }
-       });
+            }
+        });
 
         Call<AreaResponse> callArea = mealsServices.getAreas();
         callArea.enqueue(new Callback<AreaResponse>() {
@@ -101,9 +126,9 @@ public class Home extends AppCompatActivity {
                 if (response.isSuccessful())
                 {
                     AreaResponse areaResponse = response.body();
-//                    List<Area>areasList = areaResponse.getMeals();
-//                    AreaRecycleView areasRecycleView = new AreaRecycleView(Home.this , areasList.toArray(new Area[0]));
-//                    areaRecycler.setAdapter(areasRecycleView);
+                    List<Area>areasList = areaResponse.getMeals();
+                    AreaRecycleView areasRecycleView = new AreaRecycleView(requireContext() , areasList.toArray(new Area[0]));
+                    areaRecycler.setAdapter(areasRecycleView);
                 }
             }
 
@@ -120,8 +145,8 @@ public class Home extends AppCompatActivity {
                 {
                     IngrediantResponse ingrediantResponse = response.body();
                     List<Ingredient> ingredients = ingrediantResponse.getMeals();
-//                    AllIngrediantsRecyclerView allIngrediantsRecyclerView = new AllIngrediantsRecyclerView(Home.this , ingredients.toArray(new Ingredient[0]));
-//                    ingrediantRecycler.setAdapter(allIngrediantsRecyclerView);
+                    AllIngrediantsRecyclerView allIngrediantsRecyclerView = new AllIngrediantsRecyclerView(requireContext() , ingredients.toArray(new Ingredient[0]));
+                    ingrediantRecycler.setAdapter(allIngrediantsRecyclerView);
                 }
             }
 

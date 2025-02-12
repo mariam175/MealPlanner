@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -17,10 +18,12 @@ import com.bumptech.glide.request.RequestOptions;
 public class CatigoriesRecycleView extends RecyclerView.Adapter<ViewHolder> {
     Context context;
     Catigory[] catigories;
+    View fragmentView;
 
-    public CatigoriesRecycleView(Context context, Catigory[] catigories) {
+    public CatigoriesRecycleView(Context context, Catigory[] catigories , View fragmentView) {
         this.context = context;
         this.catigories = catigories;
+        this.fragmentView = fragmentView;
     }
 
     @NonNull
@@ -43,10 +46,13 @@ public class CatigoriesRecycleView extends RecyclerView.Adapter<ViewHolder> {
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context , Meals.class);
-                intent.putExtra("Type" , "catigory");
-                intent.putExtra("Catigory" , currentCatigory.getStrCategory());
-                context.startActivity(intent);
+//                Intent intent = new Intent(context , Meals.class);
+//                intent.putExtra("Type" , "catigory");
+//                intent.putExtra("Catigory" , currentCatigory.getStrCategory());
+//                context.startActivity(intent);
+                HomeFragmentDirections.ActionHomeFragmentToMealsFragment action =
+                        HomeFragmentDirections.actionHomeFragmentToMealsFragment("catigory" , currentCatigory.getStrCategory());
+                Navigation.findNavController(fragmentView).navigate(action);
             }
         });
     }
