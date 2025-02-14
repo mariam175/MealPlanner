@@ -15,15 +15,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CatigoriesRecycleView extends RecyclerView.Adapter<ViewHolder> {
     Context context;
-    Catigory[] catigories;
+    List<Catigory> catigories , filteredList;
     View fragmentView;
+    String fragment;
 
-    public CatigoriesRecycleView(Context context, Catigory[] catigories , View fragmentView) {
+    public CatigoriesRecycleView(Context context, List<Catigory>  catigories , View fragmentView , String fragment) {
         this.context = context;
         this.catigories = catigories;
         this.fragmentView = fragmentView;
+        this.fragment = fragment;
+        this.filteredList = new ArrayList<>(catigories);
     }
 
     @NonNull
@@ -37,7 +43,7 @@ public class CatigoriesRecycleView extends RecyclerView.Adapter<ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Catigory currentCatigory = catigories[position];
+        Catigory currentCatigory = filteredList.get(position);
         holder.catigoryName.setText(currentCatigory.getStrCategory());
         Glide.with(context).load(currentCatigory.getStrCategoryThumb())
                 .apply(new RequestOptions().override(300 , 300))
@@ -50,16 +56,38 @@ public class CatigoriesRecycleView extends RecyclerView.Adapter<ViewHolder> {
 //                intent.putExtra("Type" , "catigory");
 //                intent.putExtra("Catigory" , currentCatigory.getStrCategory());
 //                context.startActivity(intent);
-                HomeFragmentDirections.ActionHomeFragmentToMealsFragment action =
-                        HomeFragmentDirections.actionHomeFragmentToMealsFragment("catigory" , currentCatigory.getStrCategory());
-                Navigation.findNavController(fragmentView).navigate(action);
+                if (fragment.equals("homeFragment"))
+                {
+                    HomeFragmentDirections.ActionHomeFragmentToMealsFragment action =
+                            HomeFragmentDirections.actionHomeFragmentToMealsFragment("catigory" , currentCatigory.getStrCategory());
+                    Navigation.findNavController(fragmentView).navigate(action);
+                }
+                else {
+                    SearchFragmentDirections.ActionSearchFragmentToMealsFragment action =
+                            SearchFragmentDirections.actionSearchFragmentToMealsFragment("catigory" , currentCatigory.getStrCategory());
+                    Navigation.findNavController(fragmentView).navigate(action);
+                }
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return catigories.length;
+        return filteredList.size();
+    }
+    public void filter(String text) {
+        filteredList.clear();
+        if (text.isEmpty()) {
+            filteredList.addAll(catigories);
+        } else {
+            text = text.toLowerCase();
+            for (Catigory catigory : catigories) {
+                if (catigory.getStrCategory().toLowerCase().contains(text)) {
+                    filteredList.add(catigory);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 }
 class ViewHolder extends RecyclerView.ViewHolder

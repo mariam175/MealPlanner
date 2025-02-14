@@ -33,6 +33,10 @@ public class HomeFragment extends Fragment {
     TextView mealName;
     ImageView mealImage;
     Meal meal;
+    static List<Catigory>catigoriesList;
+    static  List<Area>areasList;
+    static List<Ingredient> ingredients;
+    String fragment = "homeFragment";
     RecyclerView recyclerView , areaRecycler , ingrediantRecycler;
     public HomeFragment() {
         // Required empty public constructor
@@ -106,8 +110,9 @@ public class HomeFragment extends Fragment {
                 if (response.isSuccessful())
                 {
                     CatigoryResponse catigoryResponse = response.body();
-                    List<Catigory>catigoriesList = catigoryResponse.getCatigoryList();
-                    CatigoriesRecycleView catigoriesRecycleView = new CatigoriesRecycleView(requireContext() , catigoriesList.toArray(new Catigory[0]) , getView());
+                    catigoriesList = catigoryResponse.getCatigoryList();
+                    List<Catigory> limitedList = catigoriesList.subList(0, 6);
+                    CatigoriesRecycleView catigoriesRecycleView = new CatigoriesRecycleView(requireContext() , limitedList, getView() , fragment);
                     recyclerView.setAdapter(catigoriesRecycleView);
                 }
             }
@@ -126,8 +131,9 @@ public class HomeFragment extends Fragment {
                 if (response.isSuccessful())
                 {
                     AreaResponse areaResponse = response.body();
-                    List<Area>areasList = areaResponse.getMeals();
-                    AreaRecycleView areasRecycleView = new AreaRecycleView(requireContext() , areasList.toArray(new Area[0]));
+                    areasList = areaResponse.getMeals();
+                    List<Area> limitedList = areasList.subList(0, 6);
+                    AreaRecycleView areasRecycleView = new AreaRecycleView(requireContext() , limitedList, fragment);
                     areaRecycler.setAdapter(areasRecycleView);
                 }
             }
@@ -144,8 +150,9 @@ public class HomeFragment extends Fragment {
                 if (response.isSuccessful())
                 {
                     IngrediantResponse ingrediantResponse = response.body();
-                    List<Ingredient> ingredients = ingrediantResponse.getMeals();
-                    AllIngrediantsRecyclerView allIngrediantsRecyclerView = new AllIngrediantsRecyclerView(requireContext() , ingredients.toArray(new Ingredient[0]));
+                    ingredients = ingrediantResponse.getMeals();
+                    List<Ingredient> limitedList = ingredients.subList(0, 6);
+                    AllIngrediantsRecyclerView allIngrediantsRecyclerView = new AllIngrediantsRecyclerView(requireContext() , limitedList, fragment);
                     ingrediantRecycler.setAdapter(allIngrediantsRecyclerView);
                 }
             }

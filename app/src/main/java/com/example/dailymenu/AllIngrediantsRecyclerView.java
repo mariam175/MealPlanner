@@ -15,14 +15,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AllIngrediantsRecyclerView extends RecyclerView.Adapter<allIngrediantsViewHolder> {
     Context context;
-    Ingredient[] ingredients;
+    List<Ingredient> ingredients , filteredList;
+    String fragment;
     private final static String INGREDIANT_IMAGE = "https://www.themealdb.com/images/ingredients/";
 
-    public AllIngrediantsRecyclerView(Context context, Ingredient[] ingredients) {
+    public AllIngrediantsRecyclerView(Context context, List<Ingredient> ingredients , String fragment) {
         this.context = context;
         this.ingredients = ingredients;
+        this.fragment = fragment;
+        this.filteredList = new ArrayList<>(ingredients);
     }
 
     @NonNull
@@ -36,7 +42,7 @@ public class AllIngrediantsRecyclerView extends RecyclerView.Adapter<allIngredia
 
     @Override
     public void onBindViewHolder(@NonNull allIngrediantsViewHolder holder, int position) {
-        Ingredient current = ingredients[position];
+        Ingredient current = filteredList.get(position);
         holder.catigoryName.setText(current.getStrIngredient());
         Glide.with(context).load(INGREDIANT_IMAGE + current.getStrIngredient() + ".png")
                 .apply(new RequestOptions().override(300 , 300))
@@ -49,17 +55,40 @@ public class AllIngrediantsRecyclerView extends RecyclerView.Adapter<allIngredia
 //                intent.putExtra("Type" , "ingrediant");
 //                intent.putExtra("Ingrediant" , current.getStrIngredient());
 //                context.startActivity(intent);
-                HomeFragmentDirections.ActionHomeFragmentToMealsFragment action =
-                        HomeFragmentDirections.actionHomeFragmentToMealsFragment("ingrediant" , current.getStrIngredient());
-                Navigation.findNavController(view).navigate(action);
+               if (fragment.equals("homeFragment"))
+               {
+                   HomeFragmentDirections.ActionHomeFragmentToMealsFragment action =
+                           HomeFragmentDirections.actionHomeFragmentToMealsFragment("ingrediant" , current.getStrIngredient());
+                   Navigation.findNavController(view).navigate(action);
+               }
+               else {
+                   SearchFragmentDirections.ActionSearchFragmentToMealsFragment action =
+                           SearchFragmentDirections.actionSearchFragmentToMealsFragment("ingrediant" , current.getStrIngredient());
+                   Navigation.findNavController(view).navigate(action);
+               }
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return ingredients.length;
+        return filteredList.size();
     }
+    public void filter(String text) {
+        filteredList.clear();
+        if (text.isEmpty()) {
+            filteredList.addAll(ingredients);
+        } else {
+            text = text.toLowerCase();
+            for (Ingredient ingredient : ingredients) {
+                if (ingredient.getStrIngredient().toLowerCase().contains(text)) {
+                    filteredList.add(ingredient);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
 }
 class allIngrediantsViewHolder extends RecyclerView.ViewHolder
 {
