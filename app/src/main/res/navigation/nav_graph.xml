@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.dailymenu.LoginFragment"
+        android:name="com.example.dailymenu.Auth.Login.View.LoginFragment"
         android:label="LoginFragment" >
         <action
             android:id="@+id/action_loginFragment_to_signupFragment"
@@ -18,7 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/signupFragment"
-        android:name="com.example.dailymenu.SignupFragment"
+        android:name="com.example.dailymenu.Auth.Signup.SignupFragment"
         android:label="SignupFragment" >
         <action
             android:id="@+id/action_signupFragment_to_loginFragment"
@@ -26,7 +26,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.dailymenu.HomeFragment"
+        android:name="com.example.dailymenu.Home.HomeFragment"
         android:label="HomeFragment" >
         <action
             android:id="@+id/action_homeFragment_to_mealDetailsFragment"
@@ -40,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/mealDetailsFragment"
-        android:name="com.example.dailymenu.MealDetailsFragment"
+        android:name="com.example.dailymenu.MealDetails.MealDetailsFragment"
         android:label="MealDetailsFragment" >
         <argument
             android:name="mealId"
@@ -48,7 +48,7 @@
     </fragment>
     <fragment
         android:id="@+id/mealsFragment"
-        android:name="com.example.dailymenu.MealsFragment"
+        android:name="com.example.dailymenu.Search.MealsFragment"
         android:label="MealsFragment" >
         <action
             android:id="@+id/action_mealsFragment_to_mealDetailsFragment"
@@ -62,7 +62,7 @@
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.example.dailymenu.SearchFragment"
+        android:name="com.example.dailymenu.Search.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" >
         <action
@@ -71,17 +71,17 @@
     </fragment>
     <fragment
         android:id="@+id/favouritesFragment"
-        android:name="com.example.dailymenu.FavouritesFragment"
+        android:name="com.example.dailymenu.Favourit.FavouritesFragment"
         android:label="fragment_favourites"
         tools:layout="@layout/fragment_favourites" />
     <fragment
         android:id="@+id/calenderFragment"
-        android:name="com.example.dailymenu.CalenderFragment"
+        android:name="com.example.dailymenu.Calender.CalenderFragment"
         android:label="fragment_calender"
         tools:layout="@layout/fragment_calender" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.dailymenu.ProfileFragment"
+        android:name="com.example.dailymenu.Profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
 </navigation>
