@@ -110,6 +110,18 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/favorite" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_calender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="108dp"
+            android:layout_marginEnd="40dp"
+            android:clickable="true"
+            app:fabCustomSize="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/calendar" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
