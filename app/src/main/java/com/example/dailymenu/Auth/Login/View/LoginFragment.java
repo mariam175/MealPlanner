@@ -43,6 +43,8 @@ public class LoginFragment extends Fragment {
     private GoogleSignInClient client;
     TextView skip;
     LoginPresenter loginPresenter;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -69,6 +71,8 @@ public class LoginFragment extends Fragment {
         google = view.findViewById(R.id.btn_go);
         skip = view.findViewById(R.id.skip);
         mAuth = FirebaseAuth.getInstance();
+         sharedPreferences = requireContext().getSharedPreferences("Logged" , Context.MODE_PRIVATE);
+         editor = sharedPreferences.edit();
         loginPresenter = new LoginPresenter();
         GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.clientId))
@@ -99,6 +103,8 @@ public class LoginFragment extends Fragment {
                     {
                         Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_homeFragment);
                         Toast.makeText(requireContext(), "Login Successfully", Toast.LENGTH_SHORT).show();
+                        editor.putBoolean("isLogin" , true);
+                        editor.commit();
                     }
                     else{
                         Toast.makeText(requireContext(), "Email or Password is incorrect", Toast.LENGTH_SHORT).show();
@@ -123,8 +129,7 @@ public class LoginFragment extends Fragment {
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Logged" , Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
+
                 editor.putBoolean("isLogin" , false);
                 editor.commit();
 //                startActivity(new Intent(requireContext() , Home.class));
@@ -147,6 +152,8 @@ public class LoginFragment extends Fragment {
                                 if(task.isSuccessful()){
                                     Toast.makeText(requireContext(), "Login Successfully", Toast.LENGTH_SHORT).show();
                                     Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_homeFragment);
+                                    editor.putBoolean("isLogin" , true);
+                                    editor.commit();
 
 
                                 }else {
