@@ -1,8 +1,15 @@
 package com.example.dailymenu.Model;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+
+
 public class MealsFilter {
     private String strMeal;
     private String strMealThumb;
+
     private String idMeal;
 
     public MealsFilter(String strMeal, String strMealThumb, String idMeal) {

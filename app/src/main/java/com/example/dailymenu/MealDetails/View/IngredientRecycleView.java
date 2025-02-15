@@ -1,4 +1,4 @@
-package com.example.dailymenu.MealDetails;
+package com.example.dailymenu.MealDetails.View;
 
 import android.content.Context;
 import android.view.LayoutInflater;

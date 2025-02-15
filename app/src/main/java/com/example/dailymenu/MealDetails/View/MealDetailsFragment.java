@@ -1,5 +1,7 @@
-package com.example.dailymenu.MealDetails;
+package com.example.dailymenu.MealDetails.View;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,13 +15,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.dailymenu.MealDetails.Presenter.MealDetailsPresenter;
+import com.example.dailymenu.Network.MealRemoteDataSource;
 import com.example.dailymenu.Network.MealsServices;
 import com.example.dailymenu.Model.IngridentItem;
 import com.example.dailymenu.Model.Meal;
 import com.example.dailymenu.Model.MealsResponse;
+import com.example.dailymenu.Network.Repositry;
 import com.example.dailymenu.R;
+import com.example.dailymenu.db.MealLocalDataSource;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
@@ -45,6 +53,11 @@ public class MealDetailsFragment extends Fragment {
     Meal meal;
     TextView area;
     List<IngridentItem> ingridentItemList;
+    FloatingActionButton fav;
+    MealDetailsPresenter presenter;
+    YouTubePlayerView youtubePlayerView;
+    SharedPreferences sharedPreferences;
+    boolean isFav;
     static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";
     public MealDetailsFragment() {
         // Required empty public constructor
@@ -74,60 +87,82 @@ public class MealDetailsFragment extends Fragment {
         img = view.findViewById(R.id.iv_image);
         recyclerView = view.findViewById(R.id.rv_ingrediants);
         area = view.findViewById(R.id.tv_area);
-
+        fav = view.findViewById(R.id.fab_addFav);
+         youtubePlayerView = view.findViewById(R.id.youtube_player_view);
         id = MealDetailsFragmentArgs.fromBundle(getArguments()).getMealId();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        MealsServices mealsServices = retrofit.create(MealsServices.class);
-        Call<MealsResponse> call = mealsServices.getMealById(id);
-        Log.i("TAG2", "onResponse: " + id);
-        call.enqueue(new Callback<MealsResponse>() {
+        presenter = new MealDetailsPresenter(this , Repositry.getInstance(MealRemoteDataSource.getInstance() , MealLocalDataSource.getInstance(getContext())));
+        meal = null;
+         sharedPreferences = requireContext().getSharedPreferences("favs" , Context.MODE_PRIVATE);
+         isFav = sharedPreferences.getBoolean(id , false);
+        presenter.getMealById(id);
+        if (meal != null)
+        {
+            updateUI();
+        }
+        Log.i("TAG", "onViewCreated: " + id);
+        fav.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Call<MealsResponse> call, Response<MealsResponse> response) {
-                if (response.isSuccessful())
-                {
-                    MealsResponse mealsResponse = response.body();
-                    List<Meal> meals = mealsResponse.getMeals();
-                    meal = meals.get(0);
-                    instr.setText(meal.getStrInstructions());
-                    area.setText(meal.getStrArea());
-
-                    YouTubePlayerView youtubePlayerView = view.findViewById(R.id.youtube_player_view);
-                    getLifecycle().addObserver(youtubePlayerView);
-
-                    String videoId = extractVideoId(meal.getStrYoutube());
-
-                    youtubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
-                        @Override
-                        public void onReady(YouTubePlayer youTubePlayer) {
-
-                            youTubePlayer.cueVideo(videoId, 0);
-                            youtubePlayerView.setOnClickListener(v -> youTubePlayer.play());
-                        }
-                    });
-
-                    Glide.with(requireContext())
-                            .load(meal.getStrMealThumb())
-                            .into(img);
-                    getIngrediants(meal);
-                    IngredientRecycleView myRecyleView = new IngredientRecycleView(requireContext() , ingridentItemList.toArray(new IngridentItem[0]));
-                    recyclerView.setAdapter(myRecyleView);
-                    Log.i("TAG2", "onResponse: " + meals.size());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MealsResponse> call, Throwable throwable) {
-                throwable.printStackTrace();
-                Log.i("TAG2", "onResponse: fail" );
+            public void onClick(View view) {
+               if (!isFav)
+               {
+                   presenter.addToFav(meal);
+                   fav.setImageResource(R.drawable.baseline_favorite_24);
+                   SharedPreferences.Editor editor = sharedPreferences.edit();
+                   editor.putBoolean(id , true);
+                   editor.commit();
+                   Toast.makeText(getContext(), "Added To Favs", Toast.LENGTH_SHORT).show();
+               }
+               else {
+                   presenter.removeFromFav(meal);
+                   fav.setImageResource(R.drawable.favorite);
+                   SharedPreferences.Editor editor = sharedPreferences.edit();
+                   editor.putBoolean(id , false);
+                   editor.commit();
+                   Toast.makeText(getContext(), "Removed From Favs", Toast.LENGTH_SHORT).show();
+               }
             }
         });
 
+    }
+    public void setMeal(Meal meal)
+    {
+        this.meal = meal;
+
+            updateUI();
+
 
     }
+
+    private void updateUI() {
+
+        instr.setText(meal.getStrInstructions());
+        area.setText(meal.getStrArea());
+
+        if (isFav)
+        {
+            fav.setImageResource(R.drawable.baseline_favorite_24);
+        }
+        getLifecycle().addObserver(youtubePlayerView);
+
+        String videoId = extractVideoId(meal.getStrYoutube());
+
+        youtubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
+            @Override
+            public void onReady(YouTubePlayer youTubePlayer) {
+
+                youTubePlayer.cueVideo(videoId, 0);
+                youtubePlayerView.setOnClickListener(v -> youTubePlayer.play());
+            }
+        });
+
+        Glide.with(getContext())
+                .load(meal.getStrMealThumb())
+                .into(img);
+        getIngrediants(meal);
+        IngredientRecycleView myRecyleView = new IngredientRecycleView(requireContext() , ingridentItemList.toArray(new IngridentItem[0]));
+        recyclerView.setAdapter(myRecyleView);
+    }
+
     void  getIngrediants(Meal meal)
     {
         Gson gson = new GsonBuilder().create();
@@ -148,7 +183,7 @@ public class MealDetailsFragment extends Fragment {
         if (youtubeUrl != null && youtubeUrl.trim().length() > 0) {
             String[] split = youtubeUrl.split("v=");
             if (split.length > 1) {
-                videoId = split[1].split("&")[0]; // Handle cases with additional query parameters
+                videoId = split[1].split("&")[0];
             }
         }
         return videoId;
