@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.dailymenu.MealDetails.MealDetails;
+import com.example.dailymenu.MealDetails.View.MealDetails;
 import com.example.dailymenu.Network.MealsServices;
 import com.example.dailymenu.Model.AreaResponse;
 import com.example.dailymenu.Model.Catigory;

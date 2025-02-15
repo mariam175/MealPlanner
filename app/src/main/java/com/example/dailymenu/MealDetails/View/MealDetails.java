@@ -1,4 +1,4 @@
-package com.example.dailymenu.MealDetails;
+package com.example.dailymenu.MealDetails.View;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package com.example.dailymenu.Search;
+package com.example.dailymenu.Favourit.View;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,32 +13,40 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.dailymenu.Model.Meal;
 import com.example.dailymenu.Model.MealsFilter;
 import com.example.dailymenu.R;
+import com.example.dailymenu.Search.MealsFragmentDirections;
 
-public class MealsRecycleView extends RecyclerView.Adapter<MealsViewHolder> {
+import java.util.List;
+
+public class FavMealsRecycleView extends RecyclerView.Adapter<FavMealsViewHolder> {
     Context context;
-    MealsFilter[] mealsFilters;
+    List<Meal> favMeals;
 
-    public MealsRecycleView(Context context, MealsFilter[] mealsFilters) {
+    public FavMealsRecycleView(Context context, List<Meal> favMeals) {
         this.context = context;
-        this.mealsFilters = mealsFilters;
+        this.favMeals = favMeals;
+    }
+
+    public void setFavMeals(List<Meal> favMeals) {
+        this.favMeals = favMeals;
     }
 
     @NonNull
     @Override
-    public MealsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FavMealsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.meal_item , parent , false);
-        MealsViewHolder holder = new MealsViewHolder(view);
+        FavMealsViewHolder holder = new FavMealsViewHolder(view);
         return holder;
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MealsViewHolder holder, int position) {
-        MealsFilter current = mealsFilters[position];
+    public void onBindViewHolder(@NonNull FavMealsViewHolder holder, int position) {
+        Meal current = favMeals.get(position);
         holder.name.setText(current.getStrMeal());
         Glide.with(context).load(current.getStrMealThumb())
                 .apply(new RequestOptions().override(200 , 200))
@@ -51,8 +59,8 @@ public class MealsRecycleView extends RecyclerView.Adapter<MealsViewHolder> {
 //                intent.putExtra("meal" ,current.getIdMeal());
 //                context.startActivity(intent);
                 Navigation.findNavController(view).popBackStack(R.id.mealDetailsFragment, true);
-                MealsFragmentDirections.ActionMealsFragmentToMealDetailsFragment action =
-                        MealsFragmentDirections.actionMealsFragmentToMealDetailsFragment(current.getIdMeal());
+                FavouritesFragmentDirections.ActionFavouritesFragmentToMealDetailsFragment action =
+                        FavouritesFragmentDirections.actionFavouritesFragmentToMealDetailsFragment(current.getIdMeal());
 
                 Navigation.findNavController(view).navigate(action);
                // Navigation.findNavController(view).navigate(action);
@@ -62,15 +70,15 @@ public class MealsRecycleView extends RecyclerView.Adapter<MealsViewHolder> {
 
     @Override
     public int getItemCount() {
-        return mealsFilters.length;
+        return favMeals.size();
     }
 }
-class MealsViewHolder extends RecyclerView.ViewHolder
+class FavMealsViewHolder extends RecyclerView.ViewHolder
 {
     View view;
     ImageView img;
     TextView name;
-    public MealsViewHolder(@NonNull View itemView) {
+    public FavMealsViewHolder(@NonNull View itemView) {
         super(itemView);
        view = itemView;
         img = itemView.findViewById(R.id.iv_meal_item);

@@ -1,8 +1,14 @@
 package com.example.dailymenu.Model;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+@Entity(tableName = "favMeals")
 public class Meal {
     private String strMeal;
+    @PrimaryKey
+    @NonNull
     private String idMeal;
     private String strArea;
     private String strCategory;

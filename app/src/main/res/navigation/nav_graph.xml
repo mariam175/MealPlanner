@@ -40,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/mealDetailsFragment"
-        android:name="com.example.dailymenu.MealDetails.MealDetailsFragment"
+        android:name="com.example.dailymenu.MealDetails.View.MealDetailsFragment"
         android:label="MealDetailsFragment" >
         <argument
             android:name="mealId"
@@ -71,9 +71,13 @@
     </fragment>
     <fragment
         android:id="@+id/favouritesFragment"
-        android:name="com.example.dailymenu.Favourit.FavouritesFragment"
+        android:name="com.example.dailymenu.Favourit.View.FavouritesFragment"
         android:label="fragment_favourites"
-        tools:layout="@layout/fragment_favourites" />
+        tools:layout="@layout/fragment_favourites" >
+        <action
+            android:id="@+id/action_favouritesFragment_to_mealDetailsFragment"
+            app:destination="@id/mealDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/calenderFragment"
         android:name="com.example.dailymenu.Calender.CalenderFragment"

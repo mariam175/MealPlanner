@@ -18,7 +18,7 @@
             android:name=".Search.Meals"
             android:exported="false" />
         <activity
-            android:name=".MealDetails.MealDetails"
+            android:name=".MealDetails.View.MealDetails"
             android:exported="false" />
         <activity
             android:name=".Home.Home"
