@@ -1,5 +1,6 @@
 package com.example.dailymenu.MealDetails.View;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,12 +14,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.dailymenu.MealDetails.Presenter.MealDetailsPresenter;
+import com.example.dailymenu.Model.MealsPlan;
 import com.example.dailymenu.Network.MealRemoteDataSource;
 import com.example.dailymenu.Network.MealsServices;
 import com.example.dailymenu.Model.IngridentItem;
@@ -35,6 +38,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -53,13 +57,15 @@ public class MealDetailsFragment extends Fragment {
     Meal meal;
     TextView area;
     List<IngridentItem> ingridentItemList;
-    FloatingActionButton fav;
+    FloatingActionButton fav , plan;
     MealDetailsPresenter presenter;
     YouTubePlayerView youtubePlayerView;
     SharedPreferences sharedPreferences;
     SharedPreferences isLogged;
     boolean isFav;
     boolean logged;
+    String date = null;
+    private static final String TAG = "MealDetailsFragment";
     static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";
     public MealDetailsFragment() {
         // Required empty public constructor
@@ -83,21 +89,23 @@ public class MealDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        meal = null;
         ingridentItemList = new ArrayList<>();
         instr = view.findViewById(R.id.tv_instractions);
         img = view.findViewById(R.id.iv_image);
         recyclerView = view.findViewById(R.id.rv_ingrediants);
         area = view.findViewById(R.id.tv_area);
         fav = view.findViewById(R.id.fab_addFav);
-         youtubePlayerView = view.findViewById(R.id.youtube_player_view);
+        plan = view.findViewById(R.id.fab_calender);
+        youtubePlayerView = view.findViewById(R.id.youtube_player_view);
+
         id = MealDetailsFragmentArgs.fromBundle(getArguments()).getMealId();
         presenter = new MealDetailsPresenter(this , Repositry.getInstance(MealRemoteDataSource.getInstance() , MealLocalDataSource.getInstance(getContext())));
-        meal = null;
          sharedPreferences = requireContext().getSharedPreferences("favs" , Context.MODE_PRIVATE);
          isLogged = requireContext().getSharedPreferences("Logged" , Context.MODE_PRIVATE);
          isFav = sharedPreferences.getBoolean(id , false);
          logged = isLogged.getBoolean("isLogin" , false);
+
         presenter.getMealById(id);
         if (meal != null)
         {
@@ -130,6 +138,27 @@ public class MealDetailsFragment extends Fragment {
               else {
                   Toast.makeText(getContext(), "Please Login", Toast.LENGTH_SHORT).show();
               }
+            }
+        });
+
+        plan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                        date = String.valueOf(i) + "/" + String.valueOf(i1 + 1) + "/" + String.valueOf(i2);
+                        Log.i(TAG, "onDateSet: " + date);
+                        presenter.addMealToPlan(new MealsPlan(id , meal.getStrMeal() , meal.getStrMealThumb() , date));
+                        Toast.makeText(getContext() , "added to plan" , Toast.LENGTH_SHORT).show();
+                    }
+                } , year , month , day);
+                datePickerDialog.show();
+
             }
         });
 

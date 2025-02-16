@@ -6,17 +6,16 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-
 import com.example.dailymenu.Model.Meal;
+import com.example.dailymenu.Model.MealsPlan;
 
 import java.util.List;
-
 @Dao
-public interface DAO {
-    @Query("select * from favMeals")
-    LiveData<List<Meal>> favMeals();
+public interface PlansDAO {
+    @Query("select * from plans where date = :date")
+    LiveData<List<MealsPlan>> PlanedMeals(String date);
     @Insert
-    void addMeal(Meal meal);
+    void addPlanedMeal(MealsPlan mealsPlan);
     @Delete
-    void deleteMeal(Meal meal);
+    void deletePlanedMeal(MealsPlan mealsPlan);
 }

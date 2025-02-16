@@ -6,6 +6,7 @@ import com.example.dailymenu.Favourit.Presenter.FavouritePresenter;
 import com.example.dailymenu.Favourit.View.FavouritesFragment;
 import com.example.dailymenu.MealDetails.View.MealDetailsFragment;
 import com.example.dailymenu.Model.Meal;
+import com.example.dailymenu.Model.MealsPlan;
 import com.example.dailymenu.Network.MealRemoteDataSource;
 import com.example.dailymenu.Network.NetworkCallBack;
 import com.example.dailymenu.Network.Repositry;
@@ -44,5 +45,9 @@ public class MealDetailsPresenter implements NetworkCallBack<Meal> {
     public void removeFromFav(Meal meal)
     {
         repo.removeFromFav(meal);
+    }
+    public void addMealToPlan(MealsPlan mealsPlan)
+    {
+        repo.addMealToPlans(mealsPlan);
     }
 }
