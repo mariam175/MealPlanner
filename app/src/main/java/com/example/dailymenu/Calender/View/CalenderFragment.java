@@ -24,6 +24,7 @@ import com.example.dailymenu.R;
 import com.example.dailymenu.db.MealLocalDataSource;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -34,6 +35,11 @@ public class CalenderFragment extends Fragment implements OnPlanListener{
     CalenderPresenter presenter;
     PlansRecyclerView plansRecyclerView;
     private static final String TAG = "CalenderFragment";
+    Calendar calendar = Calendar.getInstance();
+    int year = calendar.get(Calendar.YEAR);
+    int month = calendar.get(Calendar.MONTH);
+    int day = calendar.get(Calendar.DAY_OF_MONTH);
+    String todayDate;
     public CalenderFragment() {
         // Required empty public constructor
     }
@@ -58,9 +64,17 @@ public class CalenderFragment extends Fragment implements OnPlanListener{
         super.onViewCreated(view, savedInstanceState);
         calender = view.findViewById(R.id.calender);
         recyclerView = view.findViewById(R.id.rv_plans);
-
+        todayDate = String.valueOf(year) + "/" + String.valueOf(month + 1) + "/" + String.valueOf(day);
         presenter = new CalenderPresenter(this , Repositry.getInstance(MealRemoteDataSource.getInstance() , MealLocalDataSource.getInstance(getContext())));
         plansRecyclerView = new PlansRecyclerView(new ArrayList<>() , getContext() , this);
+        presenter.getPlansByDate(todayDate).observe(getViewLifecycleOwner(), new Observer<List<MealsPlan>>() {
+            @Override
+            public void onChanged(List<MealsPlan> mealsPlans) {
+                plansRecyclerView.setPlans(mealsPlans);
+                recyclerView.setAdapter(plansRecyclerView);
+                plansRecyclerView.notifyDataSetChanged();
+            }
+        });
        calender.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
            @Override
            public void onSelectedDayChange(@NonNull CalendarView calendarView, int i, int i1, int i2) {

@@ -3,7 +3,9 @@ package com.example.dailymenu.db;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
+import androidx.room.Ignore;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.example.dailymenu.Model.Meal;
@@ -14,7 +16,7 @@ import java.util.List;
 public interface PlansDAO {
     @Query("select * from plans where date = :date")
     LiveData<List<MealsPlan>> PlanedMeals(String date);
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void addPlanedMeal(MealsPlan mealsPlan);
     @Delete
     void deletePlanedMeal(MealsPlan mealsPlan);
