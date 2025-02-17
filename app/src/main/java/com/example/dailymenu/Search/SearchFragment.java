@@ -27,6 +27,7 @@ import com.example.dailymenu.Model.Area;
 import com.example.dailymenu.Model.Catigory;
 import com.example.dailymenu.Model.Ingredient;
 import com.example.dailymenu.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
@@ -47,6 +48,7 @@ public class SearchFragment extends Fragment implements OnAreaClick {
     CatigoriesRecycleView catigoriesRecycleView;
     NestedScrollView scrollView;
     AreaRecycleView areaRecycleView;
+    BottomNavigationView bottomNav;
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -73,6 +75,13 @@ public class SearchFragment extends Fragment implements OnAreaClick {
         chips = view.findViewById(R.id.chipGroup);
         search = view.findViewById(R.id.et_search);
         scrollView = view.findViewById(R.id.scrollview);
+        bottomNav = view.findViewById(R.id.bottom_nav);
+        if (chips.getChildCount() > 0) {
+            Chip firstChip = (Chip) chips.getChildAt(0);
+            firstChip.setChecked(true);
+            checked = firstChip.getText().toString();
+            updateRecyclerView();
+        }
         for(int i = 0; i < chips.getChildCount() ; i++)
         {
             Chip chip = (Chip) chips.getChildAt(i);
@@ -86,11 +95,6 @@ public class SearchFragment extends Fragment implements OnAreaClick {
                 }
             });
         }
-        search.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                scrollView.postDelayed(() -> scrollView.smoothScrollTo(0, search.getBottom()), 200);
-            }
-        });
         search.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -100,7 +104,7 @@ public class SearchFragment extends Fragment implements OnAreaClick {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (checked.equals("Catigories")) {
+                if (checked.equals("Categories")) {
                     catigoriesRecycleView.filter(charSequence.toString());
                 }
                 else  if (checked.equals("Areas"))
@@ -120,21 +124,24 @@ public class SearchFragment extends Fragment implements OnAreaClick {
     }
     private void updateRecyclerView() {
 
-        if (checked.equals("Catigories")) {
+        if (checked.equals("Categories")) {
              catigoriesRecycleView = new CatigoriesRecycleView(requireContext() , catigories , getView() , fragmentName);
             recyclerView.setLayoutManager(new GridLayoutManager(requireContext() , 2));
             recyclerView.setAdapter(catigoriesRecycleView);
+            catigoriesRecycleView.notifyDataSetChanged();
         }
         else if (checked.equals("Areas"))
         {
              areaRecycleView = new AreaRecycleView(requireContext() , areas, this);
             recyclerView.setLayoutManager(new GridLayoutManager(requireContext() , 2));
             recyclerView.setAdapter(areaRecycleView);
+            areaRecycleView.notifyDataSetChanged();
         }
         else {
              ingredientRecycleView = new AllIngrediantsRecyclerView(requireContext() , ingredients , fragmentName);
             recyclerView.setLayoutManager(new GridLayoutManager(requireContext() , 2));
             recyclerView.setAdapter(ingredientRecycleView);
+            ingredientRecycleView.notifyDataSetChanged();
         }
     }
 

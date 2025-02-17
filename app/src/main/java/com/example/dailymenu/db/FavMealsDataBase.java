@@ -7,13 +7,14 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.example.dailymenu.Model.Meal;
-import com.example.dailymenu.Model.MealsFilter;
+import com.example.dailymenu.Model.MealsPlan;
 
 
-@Database(entities = {Meal.class} , version = 1)
+@Database(entities = {Meal.class , MealsPlan.class} , version = 2)
 public abstract class FavMealsDataBase extends RoomDatabase {
     private static FavMealsDataBase favMealsDataBase = null;
     public abstract DAO dao();
+    public abstract PlansDAO plansDAO();
     public static FavMealsDataBase getInstance(Context context)
     {
        if (favMealsDataBase == null){

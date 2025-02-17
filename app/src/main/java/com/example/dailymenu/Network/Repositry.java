@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 
 import com.example.dailymenu.Model.Meal;
 import com.example.dailymenu.Model.MealsFilter;
+import com.example.dailymenu.Model.MealsPlan;
 import com.example.dailymenu.db.MealLocalDataSource;
 
 import java.util.List;
@@ -40,5 +41,17 @@ public class Repositry {
     public LiveData<List<Meal>> getFavMeals()
     {
         return mealLocalDataSource.getData();
+    }
+    public void addMealToPlans(MealsPlan mealsPlan)
+    {
+        mealLocalDataSource.addMealToPlan(mealsPlan);
+    }
+    public void removeFromPlans(MealsPlan mealsPlan)
+    {
+        mealLocalDataSource.removeFromPlans(mealsPlan);
+    }
+    public LiveData<List<MealsPlan>> getPlanMealsByDate(String date)
+    {
+        return mealLocalDataSource.getAllPlanByDate(date);
     }
 }

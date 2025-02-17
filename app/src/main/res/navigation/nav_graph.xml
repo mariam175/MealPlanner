@@ -80,9 +80,13 @@
     </fragment>
     <fragment
         android:id="@+id/calenderFragment"
-        android:name="com.example.dailymenu.Calender.CalenderFragment"
+        android:name="com.example.dailymenu.Calender.View.CalenderFragment"
         android:label="fragment_calender"
-        tools:layout="@layout/fragment_calender" />
+        tools:layout="@layout/fragment_calender" >
+        <action
+            android:id="@+id/action_calenderFragment_to_mealDetailsFragment"
+            app:destination="@id/mealDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.dailymenu.Profile.ProfileFragment"

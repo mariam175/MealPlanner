@@ -8,7 +8,6 @@ import androidx.room.Query;
 
 
 import com.example.dailymenu.Model.Meal;
-import com.example.dailymenu.Model.MealsFilter;
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ public interface DAO {
     @Query("select * from favMeals")
     LiveData<List<Meal>> favMeals();
     @Insert
-    void addMovie(Meal meal);
+    void addMeal(Meal meal);
     @Delete
-    void deleteMovie(Meal meal);
+    void deleteMeal(Meal meal);
 }
