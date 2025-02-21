@@ -2,12 +2,21 @@ package com.example.dailymenu.Network;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.dailymenu.Model.AreaResponse;
+import com.example.dailymenu.Model.CatigoryResponse;
+import com.example.dailymenu.Model.IngrediantResponse;
 import com.example.dailymenu.Model.Meal;
 import com.example.dailymenu.Model.MealsFilter;
+import com.example.dailymenu.Model.MealsFilterResponse;
 import com.example.dailymenu.Model.MealsPlan;
+import com.example.dailymenu.Model.MealsResponse;
 import com.example.dailymenu.db.MealLocalDataSource;
 
 import java.util.List;
+
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
 public class Repositry {
     MealRemoteDataSource mealRemoteDataSource;
@@ -26,32 +35,60 @@ public class Repositry {
         }
         return repo;
     }
-    public void getMealById(NetworkCallBack networkCallBack , String id)
+    public  Single<MealsResponse> getMealById(String id)
     {
-         mealRemoteDataSource.getMealById(networkCallBack , id);
+         return mealRemoteDataSource.getMealById(id);
     }
-    public void addToFav(Meal meal)
+    public Completable addToFav(Meal meal)
     {
-        mealLocalDataSource.add(meal);
+       return mealLocalDataSource.add(meal);
     }
-    public void removeFromFav(Meal meal)
+    public Completable removeFromFav(Meal meal)
     {
-        mealLocalDataSource.delete(meal);
+        return mealLocalDataSource.delete(meal);
     }
-    public LiveData<List<Meal>> getFavMeals()
+    public Observable<List<Meal>> getFavMeals()
     {
         return mealLocalDataSource.getData();
     }
-    public void addMealToPlans(MealsPlan mealsPlan)
+    public Completable addMealToPlans(MealsPlan mealsPlan)
     {
-        mealLocalDataSource.addMealToPlan(mealsPlan);
+        return mealLocalDataSource.addMealToPlan(mealsPlan);
     }
-    public void removeFromPlans(MealsPlan mealsPlan)
+    public Completable removeFromPlans(MealsPlan mealsPlan)
     {
-        mealLocalDataSource.removeFromPlans(mealsPlan);
+        return mealLocalDataSource.removeFromPlans(mealsPlan);
     }
-    public LiveData<List<MealsPlan>> getPlanMealsByDate(String date)
+    public Observable<List<MealsPlan>> getPlanMealsByDate(String date)
     {
         return mealLocalDataSource.getAllPlanByDate(date);
+    }
+    public Single<MealsResponse> getRandomMeal()
+    {
+        return mealRemoteDataSource.getRandomMeal();
+    }
+    public Single<CatigoryResponse> getCatigories()
+    {
+       return mealRemoteDataSource.getCategories();
+    }
+    public Single<AreaResponse>getArea()
+    {
+        return mealRemoteDataSource.getArea();
+    }
+    public Single<IngrediantResponse>getIngrediants()
+    {
+        return mealRemoteDataSource.getIngrediants();
+    }
+    public Single<MealsFilterResponse> getMealsByCategory(String c)
+    {
+        return mealRemoteDataSource.getMealsByCategory(c);
+    }
+    public Single<MealsFilterResponse> getMealsByArea(String a)
+    {
+        return mealRemoteDataSource.getMealsByArea(a);
+    }
+    public Single<MealsFilterResponse> getMealsByIngrediants(String i)
+    {
+        return mealRemoteDataSource.getMealsByIngrediants(i);
     }
 }

@@ -13,10 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.dailymenu.Home.HomeFragmentDirections;
+import com.example.dailymenu.Home.View.HomeFragmentDirections;
 import com.example.dailymenu.Model.Ingredient;
 import com.example.dailymenu.R;
-import com.example.dailymenu.Search.SearchFragmentDirections;
+
+import com.example.dailymenu.Search.Features.View.SearchFragmentDirections;
+import com.example.dailymenu.Utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +27,6 @@ public class AllIngrediantsRecyclerView extends RecyclerView.Adapter<allIngredia
     Context context;
     List<Ingredient> ingredients , filteredList;
     String fragment;
-    private final static String INGREDIANT_IMAGE = "https://www.themealdb.com/images/ingredients/";
 
     public AllIngrediantsRecyclerView(Context context, List<Ingredient> ingredients , String fragment) {
         this.context = context;
@@ -47,7 +48,7 @@ public class AllIngrediantsRecyclerView extends RecyclerView.Adapter<allIngredia
     public void onBindViewHolder(@NonNull allIngrediantsViewHolder holder, int position) {
         Ingredient current = filteredList.get(position);
         holder.catigoryName.setText(current.getStrIngredient());
-        Glide.with(context).load(INGREDIANT_IMAGE + current.getStrIngredient() + ".png")
+        Glide.with(context).load(Utils.INGREDIANT_IMAGE + current.getStrIngredient() + ".png")
                 .apply(new RequestOptions().override(300 , 300))
                 .apply(RequestOptions.circleCropTransform())
                 .into(holder.catigoryImage);

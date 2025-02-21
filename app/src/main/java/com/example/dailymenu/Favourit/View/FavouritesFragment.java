@@ -57,14 +57,13 @@ public class FavouritesFragment extends Fragment {
         favMealsRecycleView = new FavMealsRecycleView(getContext() , new ArrayList<>());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(favMealsRecycleView);
-        presenter.getAllFavs().observe(getViewLifecycleOwner(),
-                new Observer<List<Meal>>() {
-                    @Override
-                    public void onChanged(List<Meal> meals) {
-                        favMealsRecycleView.setFavMeals(meals);
-                        favMealsRecycleView.notifyDataSetChanged();
-                    }
-                });
+        presenter.getAllFavs();
 
+    }
+    public void setFavmeals(List<Meal>meals)
+    {
+        favMealsRecycleView.setFavMeals(meals);
+        recyclerView.setAdapter(favMealsRecycleView);
+        favMealsRecycleView.notifyDataSetChanged();
     }
 }

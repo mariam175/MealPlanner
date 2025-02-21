@@ -26,7 +26,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.dailymenu.Home.HomeFragment"
+        android:name="com.example.dailymenu.Home.View.HomeFragment"
         android:label="HomeFragment" >
         <action
             android:id="@+id/action_homeFragment_to_mealDetailsFragment"
@@ -48,7 +48,7 @@
     </fragment>
     <fragment
         android:id="@+id/mealsFragment"
-        android:name="com.example.dailymenu.Search.MealsFragment"
+        android:name="com.example.dailymenu.Search.Meals.View.MealsFragment"
         android:label="MealsFragment" >
         <action
             android:id="@+id/action_mealsFragment_to_mealDetailsFragment"
@@ -62,7 +62,7 @@
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.example.dailymenu.Search.SearchFragment"
+        android:name="com.example.dailymenu.Search.Features.View.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" >
         <action

@@ -14,6 +14,9 @@ import com.example.dailymenu.Network.Repositry;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class CalenderPresenter {
         CalenderFragment calenderFragment;
         Repositry repo;
@@ -27,11 +30,21 @@ public class CalenderPresenter {
 
         public void removeFromPlan(MealsPlan meal)
         {
-            repo.removeFromPlans(meal);
+            repo.removeFromPlans(meal).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            ()-> Toast.makeText(calenderFragment.getContext(), "Removed From Plan", Toast.LENGTH_SHORT).show(),
+                            err-> Toast.makeText(calenderFragment.getContext(), err.getMessage(), Toast.LENGTH_SHORT).show()
+                    );
         }
-       public LiveData<List<MealsPlan>> getPlansByDate(String date)
+       public void getPlansByDate(String date)
        {
-           return repo.getPlanMealsByDate(date);
+            repo.getPlanMealsByDate(date).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            item -> calenderFragment.getPlans(item),
+                            err-> Toast.makeText(calenderFragment.getContext(), err.getMessage(), Toast.LENGTH_SHORT).show()
+                    );
        }
 
 }

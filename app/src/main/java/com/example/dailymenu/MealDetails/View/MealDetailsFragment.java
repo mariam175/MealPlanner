@@ -33,6 +33,7 @@ import com.example.dailymenu.db.MealLocalDataSource;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
@@ -66,7 +67,6 @@ public class MealDetailsFragment extends Fragment {
     boolean logged;
     String date = null;
     private static final String TAG = "MealDetailsFragment";
-    static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";
     public MealDetailsFragment() {
         // Required empty public constructor
     }
@@ -144,21 +144,26 @@ public class MealDetailsFragment extends Fragment {
         plan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        date = String.valueOf(i) + "/" + String.valueOf(i1 + 1) + "/" + String.valueOf(i2);
-                        Log.i(TAG, "onDateSet: " + date);
-                        presenter.addMealToPlan(new MealsPlan(id , meal.getStrMeal() , meal.getStrMealThumb() , date));
-                        Toast.makeText(getContext() , "added to plan" , Toast.LENGTH_SHORT).show();
-                    }
-                } , year , month , day);
-                datePickerDialog.show();
-
+                if(logged)
+                {
+                    Calendar calendar = Calendar.getInstance();
+                    int year = calendar.get(Calendar.YEAR);
+                    int month = calendar.get(Calendar.MONTH);
+                    int day = calendar.get(Calendar.DAY_OF_MONTH);
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                            date = String.valueOf(i) + "/" + String.valueOf(i1 + 1) + "/" + String.valueOf(i2);
+                            Log.i(TAG, "onDateSet: " + date);
+                            presenter.addMealToPlan(new MealsPlan(id , meal.getStrMeal() , meal.getStrMealThumb() , date));
+                            Toast.makeText(getContext() , "added to plan" , Toast.LENGTH_SHORT).show();
+                        }
+                    } , year , month , day);
+                    datePickerDialog.show();
+                }
+                else {
+                    Toast.makeText(getContext(), "Please Login", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -166,9 +171,7 @@ public class MealDetailsFragment extends Fragment {
     public void setMeal(Meal meal)
     {
         this.meal = meal;
-
             updateUI();
-
 
     }
 
@@ -192,31 +195,26 @@ public class MealDetailsFragment extends Fragment {
                 youTubePlayer.cueVideo(videoId, 0);
                 youtubePlayerView.setOnClickListener(v -> youTubePlayer.play());
             }
+
+            @Override
+            public void onError(@NonNull YouTubePlayer youTubePlayer, @NonNull PlayerConstants.PlayerError error) {
+                super.onError(youTubePlayer, error);
+                if (error == PlayerConstants.PlayerError.VIDEO_NOT_FOUND) {
+
+                    youtubePlayerView.setVisibility(View.GONE);
+                }
+            }
         });
 
         Glide.with(getContext())
                 .load(meal.getStrMealThumb())
                 .into(img);
-        getIngrediants(meal);
+        presenter.getIngrediants(meal , ingridentItemList);
         IngredientRecycleView myRecyleView = new IngredientRecycleView(requireContext() , ingridentItemList.toArray(new IngridentItem[0]));
         recyclerView.setAdapter(myRecyleView);
     }
 
-    void  getIngrediants(Meal meal)
-    {
-        Gson gson = new GsonBuilder().create();
-        String mealJson = gson.toJson(meal);
-        Map<String , String> ingrediant = gson.fromJson(mealJson , Map.class);
-        for (int i = 1; i <= 20; i++)
-        {
-            if (ingrediant.get("strIngredient"+i) == null || ingrediant.get("strIngredient"+i).isEmpty())
-                break;
-            else
-            {
-                ingridentItemList.add(new IngridentItem(ingrediant.get("strIngredient"+i) , ingrediant.get("strMeasure"+i) , "https://www.themealdb.com/images/ingredients/"+ingrediant.get("strIngredient"+i)+".png"));
-            }
-        }
-    }
+
     private String extractVideoId(String youtubeUrl) {
         String videoId = "";
         if (youtubeUrl != null && youtubeUrl.trim().length() > 0) {

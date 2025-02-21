@@ -1,5 +1,7 @@
 package com.example.dailymenu.Favourit.Presenter;
 
+import android.widget.Toast;
+
 import androidx.lifecycle.LiveData;
 
 import com.example.dailymenu.Favourit.View.FavouritesFragment;
@@ -9,6 +11,9 @@ import com.example.dailymenu.Network.Repositry;
 import com.example.dailymenu.db.MealLocalDataSource;
 
 import java.util.List;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class FavouritePresenter {
     FavouritesFragment favouritesFragment;
@@ -20,9 +25,14 @@ public class FavouritePresenter {
         this.repo = repo;
     }
 
-    public LiveData<List<Meal>> getAllFavs()
+    public void getAllFavs()
     {
-       return repo.getFavMeals();
+        repo.getFavMeals().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        item-> favouritesFragment.setFavmeals(item),
+                        err -> Toast.makeText(favouritesFragment.getContext(), err.getMessage(), Toast.LENGTH_SHORT).show()
+                );
     }
 
 }

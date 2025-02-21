@@ -6,26 +6,27 @@ import com.example.dailymenu.Model.IngrediantResponse;
 import com.example.dailymenu.Model.MealsFilterResponse;
 import com.example.dailymenu.Model.MealsResponse;
 
+import io.reactivex.rxjava3.core.Single;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface MealsServices {
    @GET("random.php")
-    Call<MealsResponse>getRandomMeals();
+   Single<MealsResponse> getRandomMeals();
    @GET("lookup.php")
-    Call<MealsResponse>getMealById(@Query("i")String i);
+    Single<MealsResponse>getMealById(@Query("i")String i);
    @GET("list.php?a=list")
-    Call<AreaResponse>getAreas();
+    Single<AreaResponse>getAreas();
     @GET("categories.php")
-    Call<CatigoryResponse> getAllCatigories();
+    Single<CatigoryResponse> getAllCatigories();
     @GET("list.php?i=list")
-    Call<IngrediantResponse>getAllIngrediants();
+    Single<IngrediantResponse>getAllIngrediants();
     @GET("filter.php")
-    Call<MealsFilterResponse> getMealsByCatigory(@Query("c")String c);
+    Single<MealsFilterResponse> getMealsByCatigory(@Query("c")String c);
     @GET("filter.php")
-    Call<MealsFilterResponse> getMealsByArea(@Query("a")String a);
+    Single<MealsFilterResponse> getMealsByArea(@Query("a")String a);
     @GET("filter.php")
-    Call<MealsFilterResponse> getMealsByIngrediants(@Query("i")String i);
+    Single<MealsFilterResponse> getMealsByIngrediants(@Query("i")String i);
 
 }

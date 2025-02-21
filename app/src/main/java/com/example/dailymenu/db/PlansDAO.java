@@ -12,12 +12,16 @@ import com.example.dailymenu.Model.Meal;
 import com.example.dailymenu.Model.MealsPlan;
 
 import java.util.List;
+
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
+
 @Dao
 public interface PlansDAO {
     @Query("select * from plans where date = :date")
-    LiveData<List<MealsPlan>> PlanedMeals(String date);
+    Observable<List<MealsPlan>> PlanedMeals(String date);
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void addPlanedMeal(MealsPlan mealsPlan);
+    Completable addPlanedMeal(MealsPlan mealsPlan);
     @Delete
-    void deletePlanedMeal(MealsPlan mealsPlan);
+    Completable deletePlanedMeal(MealsPlan mealsPlan);
 }

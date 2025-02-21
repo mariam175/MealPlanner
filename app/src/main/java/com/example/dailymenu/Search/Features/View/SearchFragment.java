@@ -1,4 +1,4 @@
-package com.example.dailymenu.Search;
+package com.example.dailymenu.Search.Features.View;
 
 import android.os.Bundle;
 
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,23 +23,28 @@ import com.example.dailymenu.Area.OnAreaClick;
 import com.example.dailymenu.Ingrediants.AllIngrediantsRecyclerView;
 import com.example.dailymenu.Area.AreaRecycleView;
 import com.example.dailymenu.Catigory.CatigoriesRecycleView;
-import com.example.dailymenu.Home.HomeFragment;
+import com.example.dailymenu.Home.View.HomeFragment;
 import com.example.dailymenu.Model.Area;
 import com.example.dailymenu.Model.Catigory;
 import com.example.dailymenu.Model.Ingredient;
+import com.example.dailymenu.Network.MealRemoteDataSource;
+import com.example.dailymenu.Network.Repositry;
 import com.example.dailymenu.R;
+import com.example.dailymenu.Search.Features.Presenter.SearchPresenter;
+import com.example.dailymenu.db.MealLocalDataSource;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class SearchFragment extends Fragment implements OnAreaClick {
 
-    List<Catigory> catigories = HomeFragment.catigoriesList;
-    List<Area> areas = HomeFragment.areasList;
-    List<Ingredient> ingredients = HomeFragment.ingredients;
+    List<Catigory> catigories;
+    List<Area> areas;
+    List<Ingredient> ingredients;
     ChipGroup chips ;
     String checked = "";
     RecyclerView recyclerView;
@@ -49,6 +55,8 @@ public class SearchFragment extends Fragment implements OnAreaClick {
     NestedScrollView scrollView;
     AreaRecycleView areaRecycleView;
     BottomNavigationView bottomNav;
+    SearchPresenter presenter;
+
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -76,6 +84,10 @@ public class SearchFragment extends Fragment implements OnAreaClick {
         search = view.findViewById(R.id.et_search);
         scrollView = view.findViewById(R.id.scrollview);
         bottomNav = view.findViewById(R.id.bottom_nav);
+        presenter = new SearchPresenter(this , Repositry.getInstance(MealRemoteDataSource.getInstance() , MealLocalDataSource.getInstance(getContext())));
+        presenter.getCatigories();
+        presenter.getArea();
+        presenter.getIngrediants();
         if (chips.getChildCount() > 0) {
             Chip firstChip = (Chip) chips.getChildAt(0);
             firstChip.setChecked(true);
@@ -123,32 +135,58 @@ public class SearchFragment extends Fragment implements OnAreaClick {
         });
     }
     private void updateRecyclerView() {
-
         if (checked.equals("Categories")) {
-             catigoriesRecycleView = new CatigoriesRecycleView(requireContext() , catigories , getView() , fragmentName);
-            recyclerView.setLayoutManager(new GridLayoutManager(requireContext() , 2));
+            if (catigories == null) {
+                catigories = new ArrayList<>();
+            }
+            catigoriesRecycleView = new CatigoriesRecycleView(requireContext(), catigories, getView(), fragmentName);
+            recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
             recyclerView.setAdapter(catigoriesRecycleView);
             catigoriesRecycleView.notifyDataSetChanged();
-        }
-        else if (checked.equals("Areas"))
-        {
-             areaRecycleView = new AreaRecycleView(requireContext() , areas, this);
-            recyclerView.setLayoutManager(new GridLayoutManager(requireContext() , 2));
+        } else if (checked.equals("Areas")) {
+            if (areas == null) {
+                areas = new ArrayList<>();
+            }
+            areaRecycleView = new AreaRecycleView(requireContext(), areas, this);
+            recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
             recyclerView.setAdapter(areaRecycleView);
             areaRecycleView.notifyDataSetChanged();
-        }
-        else {
-             ingredientRecycleView = new AllIngrediantsRecyclerView(requireContext() , ingredients , fragmentName);
-            recyclerView.setLayoutManager(new GridLayoutManager(requireContext() , 2));
+        } else {
+            if (ingredients == null) {
+                ingredients = new ArrayList<>();
+            }
+            ingredientRecycleView = new AllIngrediantsRecyclerView(requireContext(), ingredients, fragmentName);
+            recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
             recyclerView.setAdapter(ingredientRecycleView);
             ingredientRecycleView.notifyDataSetChanged();
         }
     }
 
+
     @Override
     public void onclick(View view , String area) {
+        if (area == null || area.isEmpty()) {
+            return;
+        }
+        Log.i("Search Fragment", "onclick: " + area);
         SearchFragmentDirections.ActionSearchFragmentToMealsFragment action =
                 SearchFragmentDirections.actionSearchFragmentToMealsFragment("area" , area);
         Navigation.findNavController(view).navigate(action);
     }
+    public void setCategoriesList(List<Catigory> catigoriesList) {
+        this.catigories = (catigoriesList != null) ? catigoriesList : new ArrayList<>();
+
+
+    }
+
+    public void setAreaLis(List<Area> areasList) {
+        this.areas = (areasList != null) ? areasList : new ArrayList<>();
+
+    }
+
+    public void setIngrediantList(List<Ingredient> ingredientsList) {
+        this.ingredients = (ingredientsList != null) ? ingredientsList : new ArrayList<>();
+
+    }
+
 }

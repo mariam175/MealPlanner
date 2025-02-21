@@ -67,27 +67,13 @@ public class CalenderFragment extends Fragment implements OnPlanListener{
         todayDate = String.valueOf(year) + "/" + String.valueOf(month + 1) + "/" + String.valueOf(day);
         presenter = new CalenderPresenter(this , Repositry.getInstance(MealRemoteDataSource.getInstance() , MealLocalDataSource.getInstance(getContext())));
         plansRecyclerView = new PlansRecyclerView(new ArrayList<>() , getContext() , this);
-        presenter.getPlansByDate(todayDate).observe(getViewLifecycleOwner(), new Observer<List<MealsPlan>>() {
-            @Override
-            public void onChanged(List<MealsPlan> mealsPlans) {
-                plansRecyclerView.setPlans(mealsPlans);
-                recyclerView.setAdapter(plansRecyclerView);
-                plansRecyclerView.notifyDataSetChanged();
-            }
-        });
+        presenter.getPlansByDate(todayDate);
        calender.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
            @Override
            public void onSelectedDayChange(@NonNull CalendarView calendarView, int i, int i1, int i2) {
                date = String.valueOf(i) + "/" + String.valueOf(i1 + 1) + "/" + String.valueOf(i2);
                Log.i(TAG, "onSelectedDayChange: " + date);
-               presenter.getPlansByDate(date).observe(getViewLifecycleOwner(), new Observer<List<MealsPlan>>() {
-                   @Override
-                   public void onChanged(List<MealsPlan> mealsPlans) {
-                       plansRecyclerView.setPlans(mealsPlans);
-                       recyclerView.setAdapter(plansRecyclerView);
-                       plansRecyclerView.notifyDataSetChanged();
-                   }
-               });
+               presenter.getPlansByDate(date);
            }
        });
     }
@@ -103,5 +89,10 @@ public class CalenderFragment extends Fragment implements OnPlanListener{
         CalenderFragmentDirections.ActionCalenderFragmentToMealDetailsFragment action =
                 CalenderFragmentDirections.actionCalenderFragmentToMealDetailsFragment(id);
         Navigation.findNavController(getView()).navigate(action);
+    }
+    public void getPlans(List<MealsPlan> mealsPlans) {
+        plansRecyclerView.setPlans(mealsPlans);
+        recyclerView.setAdapter(plansRecyclerView);
+        plansRecyclerView.notifyDataSetChanged();
     }
 }

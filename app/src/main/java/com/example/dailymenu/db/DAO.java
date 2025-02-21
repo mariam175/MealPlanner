@@ -11,12 +11,15 @@ import com.example.dailymenu.Model.Meal;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
+
 @Dao
 public interface DAO {
     @Query("select * from favMeals")
-    LiveData<List<Meal>> favMeals();
+    Observable<List<Meal>> favMeals();
     @Insert
-    void addMeal(Meal meal);
+    Completable addMeal(Meal meal);
     @Delete
-    void deleteMeal(Meal meal);
+    Completable deleteMeal(Meal meal);
 }
