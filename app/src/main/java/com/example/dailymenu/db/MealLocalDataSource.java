@@ -9,6 +9,9 @@ import com.example.dailymenu.Model.MealsPlan;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
+
 public class MealLocalDataSource {
     private DAO dao;
     private PlansDAO plansDAO;
@@ -20,7 +23,7 @@ public class MealLocalDataSource {
        FavMealsDataBase db = FavMealsDataBase.getInstance(context.getApplicationContext());
        dao = db.dao();
        plansDAO = db.plansDAO();
-       meals = dao.favMeals();
+
     }
     public static MealLocalDataSource getInstance(Context context)
     {
@@ -30,47 +33,27 @@ public class MealLocalDataSource {
         }
         return mealLocalDataSource;
     }
-    public LiveData<List<Meal>> getData()
+    public Observable<List<Meal>> getData()
     {
-        return meals;
+        return dao.favMeals();
     }
-    public void delete(Meal meal)
+    public Completable delete(Meal meal)
     {
-        new Thread(){
-            public void run()
-            {
-                dao.deleteMeal(meal);
-            }
-        }.start();
+        return dao.deleteMeal(meal);
     }
-    public void add(Meal meal)
+    public Completable add(Meal meal)
     {
-        new Thread(){
-            public void run()
-            {
-                dao.addMeal(meal);
-            }
-        }.start();
+        return dao.addMeal(meal);
     }
-    public void addMealToPlan(MealsPlan mealsPlan)
+    public Completable addMealToPlan(MealsPlan mealsPlan)
     {
-        new Thread(){
-            public void run()
-            {
-                plansDAO.addPlanedMeal(mealsPlan);
-            }
-        }.start();
+       return plansDAO.addPlanedMeal(mealsPlan);
     }
-    public void removeFromPlans(MealsPlan meal)
+    public Completable removeFromPlans(MealsPlan meal)
     {
-        new Thread(){
-            public void run()
-            {
-                plansDAO.deletePlanedMeal(meal);
-            }
-        }.start();
+        return plansDAO.deletePlanedMeal(meal);
     }
-    public LiveData<List<MealsPlan>> getAllPlanByDate(String date)
+    public Observable<List<MealsPlan>> getAllPlanByDate(String date)
     {
         return plansDAO.PlanedMeals(date);
     }

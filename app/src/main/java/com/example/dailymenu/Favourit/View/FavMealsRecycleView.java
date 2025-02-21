@@ -16,7 +16,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.dailymenu.Model.Meal;
 import com.example.dailymenu.Model.MealsFilter;
 import com.example.dailymenu.R;
-import com.example.dailymenu.Search.MealsFragmentDirections;
 
 import java.util.List;
 

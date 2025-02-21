@@ -1,4 +1,4 @@
-package com.example.dailymenu.Search;
+package com.example.dailymenu.Search.Meals.View;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,6 +15,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.dailymenu.Model.MealsFilter;
 import com.example.dailymenu.R;
+
+
 
 public class MealsRecycleView extends RecyclerView.Adapter<MealsViewHolder> {
     Context context;

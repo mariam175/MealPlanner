@@ -13,10 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.dailymenu.Home.HomeFragmentDirections;
+import com.example.dailymenu.Home.View.HomeFragmentDirections;
 import com.example.dailymenu.Model.Catigory;
 import com.example.dailymenu.R;
-import com.example.dailymenu.Search.SearchFragmentDirections;
+import com.example.dailymenu.Search.Features.View.SearchFragmentDirections;
+
 
 import java.util.ArrayList;
 import java.util.List;

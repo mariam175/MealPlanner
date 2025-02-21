@@ -1,16 +1,9 @@
 package com.example.dailymenu.Auth.Login.Presenter;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.Navigation;
 
-import com.example.dailymenu.Auth.Login.View.login;
-import com.example.dailymenu.Home.Home;
-import com.example.dailymenu.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;

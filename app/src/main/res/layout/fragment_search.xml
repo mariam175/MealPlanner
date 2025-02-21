@@ -12,7 +12,7 @@
             android:id="@+id/search_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".Search.SearchFragment">
+            tools:context=".Search.Features.View.SearchFragment">
 
             <EditText
                 android:id="@+id/et_search"
