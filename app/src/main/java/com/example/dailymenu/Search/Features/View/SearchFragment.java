@@ -38,6 +38,9 @@ import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import io.reactivex.rxjava3.core.Observable;
 
 
 public class SearchFragment extends Fragment implements OnAreaClick {
@@ -88,12 +91,7 @@ public class SearchFragment extends Fragment implements OnAreaClick {
         presenter.getCatigories();
         presenter.getArea();
         presenter.getIngrediants();
-        if (chips.getChildCount() > 0) {
-            Chip firstChip = (Chip) chips.getChildAt(0);
-            firstChip.setChecked(true);
-            checked = firstChip.getText().toString();
-            updateRecyclerView();
-        }
+
         for(int i = 0; i < chips.getChildCount() ; i++)
         {
             Chip chip = (Chip) chips.getChildAt(i);
@@ -117,14 +115,23 @@ public class SearchFragment extends Fragment implements OnAreaClick {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (checked.equals("Categories")) {
-                    catigoriesRecycleView.filter(charSequence.toString());
+                   List<Catigory> filter = catigories.stream()
+                           .filter(cat -> cat.getStrCategory().toLowerCase().contains(charSequence.toString().toLowerCase())).collect(Collectors.toList());
+                   catigoriesRecycleView.setFilteredList(filter);
+                   catigoriesRecycleView.notifyDataSetChanged();
                 }
                 else  if (checked.equals("Areas"))
                 {
-                    areaRecycleView.filter(charSequence.toString());
+                    List<Area> filter = areas.stream()
+                            .filter(area -> area.getStrArea().toLowerCase().contains(charSequence.toString().toLowerCase())).collect(Collectors.toList());
+                    areaRecycleView.setFilteredList(filter);
+                    areaRecycleView.notifyDataSetChanged();
                 }
-                else {
-                    ingredientRecycleView.filter(charSequence.toString());
+                else if (checked.equals("Ingrediants")){
+                    List<Ingredient> filter = ingredients.stream()
+                            .filter(ing -> ing.getStrIngredient().toLowerCase().contains(charSequence.toString().toLowerCase())).collect(Collectors.toList());
+                    ingredientRecycleView.setFilteredList(filter);
+                    ingredientRecycleView.notifyDataSetChanged();
                 }
             }
 
@@ -136,56 +143,56 @@ public class SearchFragment extends Fragment implements OnAreaClick {
     }
     private void updateRecyclerView() {
         if (checked.equals("Categories")) {
-            if (catigories == null) {
-                catigories = new ArrayList<>();
+            if (catigoriesRecycleView == null) {
+                catigoriesRecycleView = new CatigoriesRecycleView(requireContext(), catigories, getView(), fragmentName);
+                recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+                recyclerView.setAdapter(catigoriesRecycleView);
             }
-            catigoriesRecycleView = new CatigoriesRecycleView(requireContext(), catigories, getView(), fragmentName);
-            recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-            recyclerView.setAdapter(catigoriesRecycleView);
+            catigoriesRecycleView.setFilteredList(catigories);
             catigoriesRecycleView.notifyDataSetChanged();
-        } else if (checked.equals("Areas")) {
-            if (areas == null) {
-                areas = new ArrayList<>();
+        }
+        else if (checked.equals("Areas")) {
+            if (areaRecycleView == null) {
+                areaRecycleView = new AreaRecycleView(requireContext(), areas, this);
+                recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+                recyclerView.setAdapter(areaRecycleView);
             }
-            areaRecycleView = new AreaRecycleView(requireContext(), areas, this);
-            recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-            recyclerView.setAdapter(areaRecycleView);
+            areaRecycleView.setFilteredList(areas);
             areaRecycleView.notifyDataSetChanged();
-        } else {
-            if (ingredients == null) {
-                ingredients = new ArrayList<>();
+        }
+        else if (checked.equals("Ingrediants")) {
+            if (ingredientRecycleView == null) {
+                ingredientRecycleView = new AllIngrediantsRecyclerView(requireContext(), ingredients, fragmentName);
+                recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+                recyclerView.setAdapter(ingredientRecycleView);
             }
-            ingredientRecycleView = new AllIngrediantsRecyclerView(requireContext(), ingredients, fragmentName);
-            recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-            recyclerView.setAdapter(ingredientRecycleView);
+            ingredientRecycleView.setFilteredList(ingredients);
             ingredientRecycleView.notifyDataSetChanged();
         }
     }
 
 
+
     @Override
     public void onclick(View view , String area) {
-        if (area == null || area.isEmpty()) {
-            return;
-        }
         Log.i("Search Fragment", "onclick: " + area);
         SearchFragmentDirections.ActionSearchFragmentToMealsFragment action =
                 SearchFragmentDirections.actionSearchFragmentToMealsFragment("area" , area);
         Navigation.findNavController(view).navigate(action);
     }
     public void setCategoriesList(List<Catigory> catigoriesList) {
-        this.catigories = (catigoriesList != null) ? catigoriesList : new ArrayList<>();
+        this.catigories = catigoriesList;
 
 
     }
 
     public void setAreaLis(List<Area> areasList) {
-        this.areas = (areasList != null) ? areasList : new ArrayList<>();
+        this.areas = areasList ;
 
     }
 
     public void setIngrediantList(List<Ingredient> ingredientsList) {
-        this.ingredients = (ingredientsList != null) ? ingredientsList : new ArrayList<>();
+        this.ingredients =  ingredientsList;
 
     }
 

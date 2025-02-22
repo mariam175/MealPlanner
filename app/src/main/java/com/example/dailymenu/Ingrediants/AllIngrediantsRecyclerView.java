@@ -35,6 +35,10 @@ public class AllIngrediantsRecyclerView extends RecyclerView.Adapter<allIngredia
         this.filteredList = new ArrayList<>(ingredients);
     }
 
+    public void setFilteredList(List<Ingredient> filteredList) {
+        this.filteredList = filteredList;
+    }
+
     @NonNull
     @Override
     public allIngrediantsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -77,20 +81,6 @@ public class AllIngrediantsRecyclerView extends RecyclerView.Adapter<allIngredia
     @Override
     public int getItemCount() {
         return filteredList.size();
-    }
-    public void filter(String text) {
-        filteredList.clear();
-        if (text.isEmpty()) {
-            filteredList.addAll(ingredients);
-        } else {
-            text = text.toLowerCase();
-            for (Ingredient ingredient : ingredients) {
-                if (ingredient.getStrIngredient().toLowerCase().contains(text)) {
-                    filteredList.add(ingredient);
-                }
-            }
-        }
-        notifyDataSetChanged();
     }
 
 }
