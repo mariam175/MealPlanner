@@ -26,7 +26,6 @@ public class MealRemoteDataSource {
     static MealRemoteDataSource mealRemoteDataSource = null;
     private static final String TAG = "ClientApi";
     private  MealsServices mealsServices;
-    private Meal meal;
     private MealRemoteDataSource()
     {
         Retrofit retrofit = new Retrofit.Builder()

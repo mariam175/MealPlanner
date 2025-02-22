@@ -61,7 +61,6 @@ public class MealDetailsFragment extends Fragment {
     FloatingActionButton fav , plan;
     MealDetailsPresenter presenter;
     YouTubePlayerView youtubePlayerView;
-    SharedPreferences sharedPreferences;
     SharedPreferences isLogged;
     boolean isFav;
     boolean logged;
@@ -101,12 +100,11 @@ public class MealDetailsFragment extends Fragment {
 
         id = MealDetailsFragmentArgs.fromBundle(getArguments()).getMealId();
         presenter = new MealDetailsPresenter(this , Repositry.getInstance(MealRemoteDataSource.getInstance() , MealLocalDataSource.getInstance(getContext())));
-         sharedPreferences = requireContext().getSharedPreferences("favs" , Context.MODE_PRIVATE);
          isLogged = requireContext().getSharedPreferences("Logged" , Context.MODE_PRIVATE);
-         isFav = sharedPreferences.getBoolean(id , false);
          logged = isLogged.getBoolean("isLogin" , false);
 
         presenter.getMealById(id);
+        presenter.isFavMeal(id);
         if (meal != null)
         {
             updateUI();
@@ -121,18 +119,10 @@ public class MealDetailsFragment extends Fragment {
                   {
                       presenter.addToFav(meal);
                       fav.setImageResource(R.drawable.baseline_favorite_24);
-                      SharedPreferences.Editor editor = sharedPreferences.edit();
-                      editor.putBoolean(id , true);
-                      editor.commit();
-                      Toast.makeText(getContext(), "Added To Favs", Toast.LENGTH_SHORT).show();
                   }
                   else {
                       presenter.removeFromFav(meal);
                       fav.setImageResource(R.drawable.favorite);
-                      SharedPreferences.Editor editor = sharedPreferences.edit();
-                      editor.putBoolean(id , false);
-                      editor.commit();
-                      Toast.makeText(getContext(), "Removed From Favs", Toast.LENGTH_SHORT).show();
                   }
               }
               else {
@@ -214,6 +204,9 @@ public class MealDetailsFragment extends Fragment {
         recyclerView.setAdapter(myRecyleView);
     }
 
+    public void setFav(boolean fav) {
+        isFav = fav;
+    }
 
     private String extractVideoId(String youtubeUrl) {
         String videoId = "";
@@ -225,4 +218,5 @@ public class MealDetailsFragment extends Fragment {
         }
         return videoId;
     }
+
 }

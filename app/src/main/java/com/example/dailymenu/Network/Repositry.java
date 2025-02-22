@@ -2,6 +2,7 @@ package com.example.dailymenu.Network;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.dailymenu.Firebase.Firebase;
 import com.example.dailymenu.Model.AreaResponse;
 import com.example.dailymenu.Model.CatigoryResponse;
 import com.example.dailymenu.Model.IngrediantResponse;
@@ -22,10 +23,12 @@ public class Repositry {
     MealRemoteDataSource mealRemoteDataSource;
     MealLocalDataSource mealLocalDataSource;
     static Repositry repo = null;
+    Firebase firebase;
 
     private Repositry(MealRemoteDataSource mealRemoteDataSource, MealLocalDataSource mealLocalDataSource) {
         this.mealRemoteDataSource = mealRemoteDataSource;
         this.mealLocalDataSource = mealLocalDataSource;
+        firebase = new Firebase();
     }
     public static Repositry getInstance(MealRemoteDataSource mealRemoteDataSource, MealLocalDataSource mealLocalDataSource)
     {
@@ -90,5 +93,29 @@ public class Repositry {
     public Single<MealsFilterResponse> getMealsByIngrediants(String i)
     {
         return mealRemoteDataSource.getMealsByIngrediants(i);
+    }
+    public void backupFavMeal(Meal meal)
+    {
+        firebase.backupMealToFirestore(meal);
+    }
+    public void deleteFavMealFirebase(Meal meal)
+    {
+        firebase.deleteMealFromFirestore(meal);
+    }
+    public void restoreData()
+    {
+        firebase.restoreData(mealLocalDataSource);
+    }
+    public Observable<Integer> isFavMeal(String id)
+    {
+        return mealLocalDataSource.isFavMeal(id);
+    }
+    public void backupPlans(MealsPlan mealsPlan)
+    {
+         firebase.backupPlanToFirestore(mealsPlan);
+    }
+    public void removePlanFirebase(MealsPlan mealsPlan)
+    {
+        firebase.deletePlanFromFirestore(mealsPlan);
     }
 }
