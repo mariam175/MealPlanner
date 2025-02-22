@@ -11,6 +11,7 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
 public class MealLocalDataSource {
     private DAO dao;
@@ -56,5 +57,9 @@ public class MealLocalDataSource {
     public Observable<List<MealsPlan>> getAllPlanByDate(String date)
     {
         return plansDAO.PlanedMeals(date);
+    }
+    public Observable<Integer> isFavMeal(String id)
+    {
+        return dao.isMealIsFav(id);
     }
 }

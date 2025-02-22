@@ -20,7 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dailymenu.Auth.Login.Presenter.LoginPresenter;
+import com.example.dailymenu.Network.MealRemoteDataSource;
+import com.example.dailymenu.Network.Repositry;
 import com.example.dailymenu.R;
+import com.example.dailymenu.db.MealLocalDataSource;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -73,7 +76,7 @@ public class LoginFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
          sharedPreferences = requireContext().getSharedPreferences("Logged" , Context.MODE_PRIVATE);
          editor = sharedPreferences.edit();
-        loginPresenter = new LoginPresenter();
+        loginPresenter = new LoginPresenter(this , Repositry.getInstance(MealRemoteDataSource.getInstance() , MealLocalDataSource.getInstance(getContext())));
         GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.clientId))
                 .requestEmail()
@@ -101,6 +104,7 @@ public class LoginFragment extends Fragment {
                     int res = loginPresenter.login(getActivity() , emailStr , passStr);
                     if (res == 1)
                     {
+                        loginPresenter.resoreData();
                         Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_homeFragment);
                         Toast.makeText(requireContext(), "Login Successfully", Toast.LENGTH_SHORT).show();
                         editor.putBoolean("isLogin" , true);

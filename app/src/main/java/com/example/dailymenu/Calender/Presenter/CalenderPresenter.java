@@ -30,6 +30,7 @@ public class CalenderPresenter {
 
         public void removeFromPlan(MealsPlan meal)
         {
+            repo.removeFromPlans(meal);
             repo.removeFromPlans(meal).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(

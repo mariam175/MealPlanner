@@ -1,6 +1,5 @@
 package com.example.dailymenu.db;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -13,6 +12,7 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
 @Dao
 public interface DAO {
@@ -22,4 +22,6 @@ public interface DAO {
     Completable addMeal(Meal meal);
     @Delete
     Completable deleteMeal(Meal meal);
+    @Query("SELECT COUNT(*) FROM favMeals WHERE idMeal = :mealId")
+    Observable<Integer> isMealIsFav(String mealId);
 }

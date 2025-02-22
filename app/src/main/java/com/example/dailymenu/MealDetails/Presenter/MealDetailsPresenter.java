@@ -1,5 +1,6 @@
 package com.example.dailymenu.MealDetails.Presenter;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.dailymenu.Favourit.Presenter.FavouritePresenter;
@@ -50,6 +51,21 @@ public class MealDetailsPresenter{
                         ()->  Toast.makeText(mealDetailsFragment.requireContext(), "Added To Favourites", Toast.LENGTH_SHORT).show(),
                         err-> Toast.makeText(mealDetailsFragment.requireContext(), err.getMessage(), Toast.LENGTH_SHORT).show()
                 );
+        repo.backupFavMeal(meal);
+    }
+    public void isFavMeal(String id)
+    {
+
+        repo.isFavMeal(id).subscribeOn(Schedulers.io())
+                .map(item -> item > 0)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        item-> {
+                            mealDetailsFragment.setFav(item);
+                            Log.i("Fav", "isFavMeal: " + item);
+                        }
+
+                );
     }
     public void removeFromFav(Meal meal)
     {
@@ -59,9 +75,11 @@ public class MealDetailsPresenter{
                         ()->  Toast.makeText(mealDetailsFragment.requireContext(), "Removed Favourites", Toast.LENGTH_SHORT).show(),
                         err-> Toast.makeText(mealDetailsFragment.requireContext(), err.getMessage(), Toast.LENGTH_SHORT).show()
                 );
+        repo.deleteFavMealFirebase(meal);
     }
     public void addMealToPlan(MealsPlan mealsPlan)
     {
+        repo.backupPlans(mealsPlan);
         repo.addMealToPlans(mealsPlan).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
