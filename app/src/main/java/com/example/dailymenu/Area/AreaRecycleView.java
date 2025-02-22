@@ -27,6 +27,10 @@ public class AreaRecycleView extends RecyclerView.Adapter<areaViewHolder> {
         this.filteredList = new ArrayList<>(areas);
     }
 
+    public void setFilteredList(List<Area> filteredList) {
+        this.filteredList = filteredList;
+    }
+
     @NonNull
     @Override
     public areaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -56,20 +60,6 @@ public class AreaRecycleView extends RecyclerView.Adapter<areaViewHolder> {
     @Override
     public int getItemCount() {
         return filteredList.size();
-    }
-    public void filter(String text) {
-        filteredList.clear();
-        if (text.isEmpty()) {
-            filteredList.addAll(areas);
-        } else {
-            text = text.toLowerCase();
-            for (Area area : areas) {
-                if (area.getStrArea().toLowerCase().contains(text)) {
-                    filteredList.add(area);
-                }
-            }
-        }
-        notifyDataSetChanged();
     }
 }
 class areaViewHolder extends RecyclerView.ViewHolder

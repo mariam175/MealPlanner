@@ -36,6 +36,10 @@ public class CatigoriesRecycleView extends RecyclerView.Adapter<ViewHolder> {
         this.filteredList = new ArrayList<>(catigories);
     }
 
+    public void setFilteredList(List<Catigory> filteredList) {
+        this.filteredList = filteredList;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -78,20 +82,6 @@ public class CatigoriesRecycleView extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public int getItemCount() {
         return filteredList.size();
-    }
-    public void filter(String text) {
-        filteredList.clear();
-        if (text.isEmpty()) {
-            filteredList.addAll(catigories);
-        } else {
-            text = text.toLowerCase();
-            for (Catigory catigory : catigories) {
-                if (catigory.getStrCategory().toLowerCase().contains(text)) {
-                    filteredList.add(catigory);
-                }
-            }
-        }
-        notifyDataSetChanged();
     }
 }
 class ViewHolder extends RecyclerView.ViewHolder
