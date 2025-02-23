@@ -18,7 +18,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.dailymenu.Area.OnAreaClick;
 import com.example.dailymenu.Ingrediants.AllIngrediantsRecyclerView;
 import com.example.dailymenu.Area.AreaRecycleView;
@@ -31,6 +33,7 @@ import com.example.dailymenu.Network.MealRemoteDataSource;
 import com.example.dailymenu.Network.Repositry;
 import com.example.dailymenu.R;
 import com.example.dailymenu.Search.Features.Presenter.SearchPresenter;
+import com.example.dailymenu.Utils.Network;
 import com.example.dailymenu.db.MealLocalDataSource;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
@@ -59,6 +62,8 @@ public class SearchFragment extends Fragment implements OnAreaClick {
     AreaRecycleView areaRecycleView;
     BottomNavigationView bottomNav;
     SearchPresenter presenter;
+    LottieAnimationView network;
+    View con;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -87,7 +92,22 @@ public class SearchFragment extends Fragment implements OnAreaClick {
         search = view.findViewById(R.id.et_search);
         scrollView = view.findViewById(R.id.scrollview);
         bottomNav = view.findViewById(R.id.bottom_nav);
-        presenter = new SearchPresenter(this , Repositry.getInstance(MealRemoteDataSource.getInstance() , MealLocalDataSource.getInstance(getContext())));
+        con = view.findViewById(R.id.search_layout);
+        network = view.findViewById(R.id.lottie_lostNetwork);
+        if (!Network.isNetworkAvailable(requireContext())) {
+
+            network.setVisibility(View.VISIBLE);
+            con.setVisibility(View.GONE);
+            Toast.makeText(requireContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else {
+            network.setVisibility(View.GONE);
+            con.setVisibility(View.VISIBLE);
+        }
+        presenter = new SearchPresenter(this ,
+                Repositry.getInstance(MealRemoteDataSource.getInstance() ,
+                        MealLocalDataSource.getInstance(getContext())));
         presenter.getCatigories();
         presenter.getArea();
         presenter.getIngrediants();
@@ -116,7 +136,8 @@ public class SearchFragment extends Fragment implements OnAreaClick {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (checked.equals("Categories")) {
                    List<Catigory> filter = catigories.stream()
-                           .filter(cat -> cat.getStrCategory().toLowerCase().contains(charSequence.toString().toLowerCase())).collect(Collectors.toList());
+                           .filter(cat -> cat.getStrCategory().toLowerCase().contains(charSequence.toString().toLowerCase()))
+                           .collect(Collectors.toList());
                    catigoriesRecycleView.setFilteredList(filter);
                    catigoriesRecycleView.notifyDataSetChanged();
                 }
