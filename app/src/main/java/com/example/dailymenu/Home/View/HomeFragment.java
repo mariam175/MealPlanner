@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -14,6 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.dailymenu.Area.OnAreaClick;
@@ -33,6 +36,7 @@ import com.example.dailymenu.Model.Meal;
 import com.example.dailymenu.Model.MealsResponse;
 import com.example.dailymenu.Network.Repositry;
 import com.example.dailymenu.R;
+import com.example.dailymenu.Utils.Network;
 import com.example.dailymenu.db.MealLocalDataSource;
 
 import java.util.List;
@@ -54,9 +58,10 @@ public class HomeFragment extends Fragment implements OnAreaClick {
     List<Ingredient> ingredients;
     String fragment = "homeFragment";
     HomePresenter presenter;
-    static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";
-    MealsServices mealsServices;
+
     RecyclerView recyclerView , areaRecycler , ingrediantRecycler;
+    LottieAnimationView network;
+    View con;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -84,7 +89,23 @@ public class HomeFragment extends Fragment implements OnAreaClick {
         recyclerView = view.findViewById(R.id.rv_catigories);
         areaRecycler = view.findViewById(R.id.rv_areas);
         ingrediantRecycler = view.findViewById(R.id.rv_ing);
-        presenter = new HomePresenter(this , Repositry.getInstance(MealRemoteDataSource.getInstance() , MealLocalDataSource.getInstance(requireContext())));
+        con = view.findViewById(R.id.homeView);
+        network = view.findViewById(R.id.lottie_lostNetwork);
+        if (!Network.isNetworkAvailable(requireContext())) {
+
+            network.setVisibility(View.VISIBLE);
+            con.setVisibility(View.GONE);
+            Toast.makeText(requireContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else {
+            network.setVisibility(View.GONE);
+            con.setVisibility(View.VISIBLE);
+        }
+
+        presenter = new HomePresenter(this ,
+                Repositry.getInstance(MealRemoteDataSource.getInstance() ,
+                        MealLocalDataSource.getInstance(requireContext())));
         presenter.getRabdomMeal();
         presenter.getCatigories();
         presenter.getArea();

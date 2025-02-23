@@ -20,7 +20,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
-public  static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";
 BottomNavigationView bottomNavigationView;
 NavController navController;
     @Override
@@ -34,7 +33,7 @@ NavController navController;
         navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
             public void onDestinationChanged(@NonNull NavController navController, @NonNull NavDestination navDestination, @Nullable Bundle bundle) {
-                if(navDestination.getId() == R.id.loginFragment || navDestination.getId() == R.id.signupFragment) {
+                if(navDestination.getId() == R.id.splashFragment|| navDestination.getId() == R.id.loginFragment || navDestination.getId() == R.id.signupFragment) {
                     bottomNavigationView.setVisibility(View.GONE);
                 } else {
                     bottomNavigationView.setVisibility(View.VISIBLE);

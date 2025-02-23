@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/splashFragment">
 
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.dailymenu.Auth.Login.View.LoginFragment"
-        android:label="LoginFragment" >
+        android:label="LoginFragment">
         <action
             android:id="@+id/action_loginFragment_to_signupFragment"
             app:destination="@id/signupFragment" />
@@ -19,7 +19,7 @@
     <fragment
         android:id="@+id/signupFragment"
         android:name="com.example.dailymenu.Auth.Signup.SignupFragment"
-        android:label="SignupFragment" >
+        android:label="SignupFragment">
         <action
             android:id="@+id/action_signupFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
@@ -27,7 +27,7 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.dailymenu.Home.View.HomeFragment"
-        android:label="HomeFragment" >
+        android:label="HomeFragment">
         <action
             android:id="@+id/action_homeFragment_to_mealDetailsFragment"
             app:destination="@id/mealDetailsFragment" />
@@ -41,7 +41,7 @@
     <fragment
         android:id="@+id/mealDetailsFragment"
         android:name="com.example.dailymenu.MealDetails.View.MealDetailsFragment"
-        android:label="MealDetailsFragment" >
+        android:label="MealDetailsFragment">
         <argument
             android:name="mealId"
             app:argType="string" />
@@ -49,7 +49,7 @@
     <fragment
         android:id="@+id/mealsFragment"
         android:name="com.example.dailymenu.Search.Meals.View.MealsFragment"
-        android:label="MealsFragment" >
+        android:label="MealsFragment">
         <action
             android:id="@+id/action_mealsFragment_to_mealDetailsFragment"
             app:destination="@id/mealDetailsFragment" />
@@ -64,7 +64,7 @@
         android:id="@+id/searchFragment"
         android:name="com.example.dailymenu.Search.Features.View.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_searchFragment_to_mealsFragment"
             app:destination="@id/mealsFragment" />
@@ -73,7 +73,7 @@
         android:id="@+id/favouritesFragment"
         android:name="com.example.dailymenu.Favourit.View.FavouritesFragment"
         android:label="fragment_favourites"
-        tools:layout="@layout/fragment_favourites" >
+        tools:layout="@layout/fragment_favourites">
         <action
             android:id="@+id/action_favouritesFragment_to_mealDetailsFragment"
             app:destination="@id/mealDetailsFragment" />
@@ -82,7 +82,7 @@
         android:id="@+id/calenderFragment"
         android:name="com.example.dailymenu.Calender.View.CalenderFragment"
         android:label="fragment_calender"
-        tools:layout="@layout/fragment_calender" >
+        tools:layout="@layout/fragment_calender">
         <action
             android:id="@+id/action_calenderFragment_to_mealDetailsFragment"
             app:destination="@id/mealDetailsFragment" />
@@ -92,4 +92,16 @@
         android:name="com.example.dailymenu.Profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.dailymenu.splah.View.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash">
+        <action
+            android:id="@+id/action_splashFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>
