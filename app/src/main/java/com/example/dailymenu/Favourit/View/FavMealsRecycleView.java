@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.dailymenu.Model.Meal;
+import com.example.dailymenu.Model.MealsFav;
 import com.example.dailymenu.Model.MealsFilter;
 import com.example.dailymenu.R;
 
@@ -21,14 +22,14 @@ import java.util.List;
 
 public class FavMealsRecycleView extends RecyclerView.Adapter<FavMealsViewHolder> {
     Context context;
-    List<Meal> favMeals;
+    List<MealsFav> favMeals;
 
-    public FavMealsRecycleView(Context context, List<Meal> favMeals) {
+    public FavMealsRecycleView(Context context, List<MealsFav> favMeals) {
         this.context = context;
         this.favMeals = favMeals;
     }
 
-    public void setFavMeals(List<Meal> favMeals) {
+    public void setFavMeals(List<MealsFav> favMeals) {
         this.favMeals = favMeals;
     }
 
@@ -45,9 +46,9 @@ public class FavMealsRecycleView extends RecyclerView.Adapter<FavMealsViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull FavMealsViewHolder holder, int position) {
-        Meal current = favMeals.get(position);
-        holder.name.setText(current.getStrMeal());
-        Glide.with(context).load(current.getStrMealThumb())
+        MealsFav current = favMeals.get(position);
+        holder.name.setText(current.getMealName());
+        Glide.with(context).load(current.getMealImage())
                 .apply(new RequestOptions().override(200 , 200))
                 .apply(RequestOptions.circleCropTransform())
                 .into(holder.img);
@@ -59,7 +60,7 @@ public class FavMealsRecycleView extends RecyclerView.Adapter<FavMealsViewHolder
 //                context.startActivity(intent);
                 Navigation.findNavController(view).popBackStack(R.id.mealDetailsFragment, true);
                 FavouritesFragmentDirections.ActionFavouritesFragmentToMealDetailsFragment action =
-                        FavouritesFragmentDirections.actionFavouritesFragmentToMealDetailsFragment(current.getIdMeal());
+                        FavouritesFragmentDirections.actionFavouritesFragmentToMealDetailsFragment(current.getMealId());
 
                 Navigation.findNavController(view).navigate(action);
                // Navigation.findNavController(view).navigate(action);

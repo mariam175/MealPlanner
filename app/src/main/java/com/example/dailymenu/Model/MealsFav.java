@@ -4,25 +4,24 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "plans")
-public class MealsPlan {
+@Entity(tableName = "favMeals")
+public class MealsFav {
     @PrimaryKey
     @NonNull
     private String mealId;
     private String userId;
     private String mealName;
     private String mealImage;
-    private String date;
 
-    public MealsPlan() {
+    public MealsFav() {
     }
 
-    public MealsPlan(String mealId, String userId , String mealName, String mealImage, String date) {
+    public MealsFav(String mealId, String userId , String mealName, String mealImage) {
         this.mealId = mealId;
         this.userId = userId;
         this.mealName = mealName;
         this.mealImage = mealImage;
-        this.date = date;
+
     }
 
     public String getUserId() {
@@ -57,11 +56,5 @@ public class MealsPlan {
         this.mealImage = mealImage;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
 }
+

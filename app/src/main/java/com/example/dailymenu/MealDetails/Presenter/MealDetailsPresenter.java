@@ -8,6 +8,7 @@ import com.example.dailymenu.Favourit.View.FavouritesFragment;
 import com.example.dailymenu.MealDetails.View.MealDetailsFragment;
 import com.example.dailymenu.Model.IngridentItem;
 import com.example.dailymenu.Model.Meal;
+import com.example.dailymenu.Model.MealsFav;
 import com.example.dailymenu.Model.MealsPlan;
 import com.example.dailymenu.Network.MealRemoteDataSource;
 import com.example.dailymenu.Network.NetworkCallBack;
@@ -43,7 +44,7 @@ public class MealDetailsPresenter{
                  );
     }
 
-    public void addToFav(Meal meal)
+    public void addToFav(MealsFav meal)
     {
         repo.addToFav(meal).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -51,12 +52,12 @@ public class MealDetailsPresenter{
                         ()->  Toast.makeText(mealDetailsFragment.requireContext(), "Added To Favourites", Toast.LENGTH_SHORT).show(),
                         err-> Toast.makeText(mealDetailsFragment.requireContext(), err.getMessage(), Toast.LENGTH_SHORT).show()
                 );
-        repo.backupFavMeal(meal);
+        repo.backupFavMeal(meal , mealDetailsFragment.requireContext());
     }
-    public void isFavMeal(String id)
+    public void isFavMeal(String id , String userId)
     {
 
-        repo.isFavMeal(id).subscribeOn(Schedulers.io())
+        repo.isFavMeal(id , userId).subscribeOn(Schedulers.io())
                 .map(item -> item > 0)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -67,19 +68,19 @@ public class MealDetailsPresenter{
 
                 );
     }
-    public void removeFromFav(Meal meal)
+    public void removeFromFav(MealsFav meal)
     {
+        repo.deleteFavMealFirebase(meal , mealDetailsFragment.requireContext());
         repo.removeFromFav(meal).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         ()->  Toast.makeText(mealDetailsFragment.requireContext(), "Removed Favourites", Toast.LENGTH_SHORT).show(),
                         err-> Toast.makeText(mealDetailsFragment.requireContext(), err.getMessage(), Toast.LENGTH_SHORT).show()
                 );
-        repo.deleteFavMealFirebase(meal);
     }
     public void addMealToPlan(MealsPlan mealsPlan)
     {
-        repo.backupPlans(mealsPlan);
+        repo.backupPlans(mealsPlan , mealDetailsFragment.requireContext());
         repo.addMealToPlans(mealsPlan).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

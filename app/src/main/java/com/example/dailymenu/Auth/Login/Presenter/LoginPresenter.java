@@ -1,12 +1,15 @@
 package com.example.dailymenu.Auth.Login.Presenter;
 
 import android.app.Activity;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 
 import com.example.dailymenu.Auth.Login.View.LoginFragment;
 import com.example.dailymenu.Calender.View.CalenderFragment;
+import com.example.dailymenu.Firebase.AuthResonse;
 import com.example.dailymenu.Network.Repositry;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -20,24 +23,13 @@ public class LoginPresenter {
         this.loginFragment = loginFragment;
         this.repo = repo;
     }
-
-    int loginRes;
-    public int login(Activity context , String emailStr , String passStr)
+    public void loginWithEmailAndPassword(String email , String pass , AuthResonse resonse , Context context)
     {
-         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        mAuth.signInWithEmailAndPassword(emailStr, passStr)
-                .addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            loginRes = 1;
-
-                        } else {
-                            loginRes = 0;
-                        }
-                    }
-                });
-        return loginRes;
+        repo.loginWithEmailAndPassword(email, pass, resonse , context);
+    }
+    public void loginWithGoogle(GoogleSignInAccount account, AuthResonse resonse , Context context)
+    {
+        repo.loginWithGoogle(account , resonse , context);
     }
     public void resoreData()
     {

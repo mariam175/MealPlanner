@@ -25,9 +25,9 @@ public class FavouritePresenter {
         this.repo = repo;
     }
 
-    public void getAllFavs()
+    public void getAllFavs(String userId)
     {
-        repo.getFavMeals().subscribeOn(Schedulers.io())
+        repo.getFavMeals(userId).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         item-> favouritesFragment.setFavmeals(item),

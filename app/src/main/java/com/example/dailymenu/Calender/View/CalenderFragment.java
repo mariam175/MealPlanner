@@ -18,9 +18,11 @@ import android.widget.Toast;
 
 import com.example.dailymenu.Calender.Presenter.CalenderPresenter;
 import com.example.dailymenu.Model.MealsPlan;
+import com.example.dailymenu.Model.User;
 import com.example.dailymenu.Network.MealRemoteDataSource;
 import com.example.dailymenu.Network.Repositry;
 import com.example.dailymenu.R;
+import com.example.dailymenu.Utils.UserSharedPrefrence;
 import com.example.dailymenu.db.MealLocalDataSource;
 
 import java.util.ArrayList;
@@ -67,13 +69,13 @@ public class CalenderFragment extends Fragment implements OnPlanListener{
         todayDate = String.valueOf(year) + "/" + String.valueOf(month + 1) + "/" + String.valueOf(day);
         presenter = new CalenderPresenter(this , Repositry.getInstance(MealRemoteDataSource.getInstance() , MealLocalDataSource.getInstance(getContext())));
         plansRecyclerView = new PlansRecyclerView(new ArrayList<>() , getContext() , this);
-        presenter.getPlansByDate(todayDate);
+        presenter.getPlansByDate(todayDate , UserSharedPrefrence.getUserId(requireContext()));
        calender.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
            @Override
            public void onSelectedDayChange(@NonNull CalendarView calendarView, int i, int i1, int i2) {
                date = String.valueOf(i) + "/" + String.valueOf(i1 + 1) + "/" + String.valueOf(i2);
                Log.i(TAG, "onSelectedDayChange: " + date);
-               presenter.getPlansByDate(date);
+               presenter.getPlansByDate(date , UserSharedPrefrence.getUserId(requireContext()));
            }
        });
     }

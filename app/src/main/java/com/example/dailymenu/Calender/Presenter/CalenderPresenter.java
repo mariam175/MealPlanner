@@ -30,7 +30,7 @@ public class CalenderPresenter {
 
         public void removeFromPlan(MealsPlan meal)
         {
-            repo.removePlanFirebase(meal);
+            repo.removePlanFirebase(meal , calenderFragment.getContext());
             repo.removeFromPlans(meal).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
@@ -38,9 +38,9 @@ public class CalenderPresenter {
                             err-> Toast.makeText(calenderFragment.getContext(), err.getMessage(), Toast.LENGTH_SHORT).show()
                     );
         }
-       public void getPlansByDate(String date)
+       public void getPlansByDate(String date , String userId)
        {
-            repo.getPlanMealsByDate(date).subscribeOn(Schedulers.io())
+            repo.getPlanMealsByDate(date , userId).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             item -> calenderFragment.getPlans(item),

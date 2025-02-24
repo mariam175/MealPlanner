@@ -16,9 +16,11 @@ import android.view.ViewGroup;
 
 import com.example.dailymenu.Favourit.Presenter.FavouritePresenter;
 import com.example.dailymenu.Model.Meal;
+import com.example.dailymenu.Model.MealsFav;
 import com.example.dailymenu.Network.MealRemoteDataSource;
 import com.example.dailymenu.Network.Repositry;
 import com.example.dailymenu.R;
+import com.example.dailymenu.Utils.UserSharedPrefrence;
 import com.example.dailymenu.db.MealLocalDataSource;
 
 import java.util.ArrayList;
@@ -57,10 +59,10 @@ public class FavouritesFragment extends Fragment {
         favMealsRecycleView = new FavMealsRecycleView(getContext() , new ArrayList<>());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(favMealsRecycleView);
-        presenter.getAllFavs();
+        presenter.getAllFavs(UserSharedPrefrence.getUserId(requireContext()));
 
     }
-    public void setFavmeals(List<Meal>meals)
+    public void setFavmeals(List<MealsFav>meals)
     {
         favMealsRecycleView.setFavMeals(meals);
         recyclerView.setAdapter(favMealsRecycleView);
