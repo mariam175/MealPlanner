@@ -18,31 +18,26 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.dailymenu.Auth.Login.Presenter.LoginPresenter;
+import com.example.dailymenu.Firebase.AuthResonse;
 import com.example.dailymenu.Network.MealRemoteDataSource;
 import com.example.dailymenu.Network.Repositry;
 import com.example.dailymenu.R;
+import com.example.dailymenu.Utils.GoogleOptions;
 import com.example.dailymenu.db.MealLocalDataSource;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GoogleAuthProvider;
 
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment implements AuthResonse {
 
     EditText email , pass;
     Button login;
     TextView create_acc;
     ImageButton google;
-    private FirebaseAuth mAuth;
     private GoogleSignInClient client;
     TextView skip;
     LoginPresenter loginPresenter;
@@ -73,15 +68,10 @@ public class LoginFragment extends Fragment {
         create_acc = view.findViewById(R.id.tv_create_account);
         google = view.findViewById(R.id.btn_go);
         skip = view.findViewById(R.id.skip);
-        mAuth = FirebaseAuth.getInstance();
          sharedPreferences = requireContext().getSharedPreferences("Logged" , Context.MODE_PRIVATE);
          editor = sharedPreferences.edit();
         loginPresenter = new LoginPresenter(this , Repositry.getInstance(MealRemoteDataSource.getInstance() , MealLocalDataSource.getInstance(getContext())));
-        GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.clientId))
-                .requestEmail()
-                .build();
-        client = GoogleSignIn.getClient(requireContext(),options);
+
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,32 +90,20 @@ public class LoginFragment extends Fragment {
                     pass.setError("Enter Password");
                 }
                 else {
-
-                    int res = loginPresenter.login(getActivity() , emailStr , passStr);
-                    if (res == 1)
-                    {
-                        loginPresenter.resoreData();
-                        Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_homeFragment);
-                        Toast.makeText(requireContext(), "Login Successfully", Toast.LENGTH_SHORT).show();
-                        editor.putBoolean("isLogin" , true);
-                        editor.commit();
-                    }
-                    else{
-                        Toast.makeText(requireContext(), "Email or Password is incorrect", Toast.LENGTH_SHORT).show();
-                    }
+                    loginPresenter.loginWithEmailAndPassword(emailStr , passStr , LoginFragment.this , requireContext());
                 }
             }
         });
         create_acc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // startActivity(new Intent(requireContext() , signup.class));
                 Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_signupFragment);
             }
         });
         google.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                client = GoogleOptions.Options(requireContext() , getString(R.string.clientId));
                 Intent i = client.getSignInIntent();
                 startActivityForResult(i,123);
             }
@@ -133,10 +111,8 @@ public class LoginFragment extends Fragment {
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 editor.putBoolean("isLogin" , false);
                 editor.commit();
-//                startActivity(new Intent(requireContext() , Home.class));
                 Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeFragment);
             }
         });
@@ -147,25 +123,7 @@ public class LoginFragment extends Fragment {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-
-                AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(),null);
-                FirebaseAuth.getInstance().signInWithCredential(credential)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if(task.isSuccessful()){
-                                    Toast.makeText(requireContext(), "Login Successfully", Toast.LENGTH_SHORT).show();
-                                    Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_homeFragment);
-                                    editor.putBoolean("isLogin" , true);
-                                    editor.commit();
-
-
-                                }else {
-                                    Toast.makeText(requireContext(), "There is Problem Try Again", Toast.LENGTH_SHORT).show();
-                                }
-
-                            }
-                        });
+                loginPresenter.loginWithGoogle(account , LoginFragment.this , requireContext());
 
             } catch (ApiException e) {
                 e.printStackTrace();
@@ -173,5 +131,19 @@ public class LoginFragment extends Fragment {
 
         }
 
+    }
+
+    @Override
+    public void onLoginSuccess() {
+        loginPresenter.resoreData();
+        Toast.makeText(requireContext(), "Login Successfully", Toast.LENGTH_SHORT).show();
+        Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_homeFragment);
+        editor.putBoolean("isLogin" , true);
+        editor.commit();
+    }
+
+    @Override
+    public void onLoginFailure() {
+        Toast.makeText(requireContext(), "Email or Password is incorrect", Toast.LENGTH_SHORT).show();
     }
 }

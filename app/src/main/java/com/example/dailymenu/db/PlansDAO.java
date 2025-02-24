@@ -18,8 +18,8 @@ import io.reactivex.rxjava3.core.Observable;
 
 @Dao
 public interface PlansDAO {
-    @Query("select * from plans where date = :date")
-    Observable<List<MealsPlan>> PlanedMeals(String date);
+    @Query("select * from plans where date = :date and userId = :userId")
+    Observable<List<MealsPlan>> PlanedMeals(String date , String userId);
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Completable addPlanedMeal(MealsPlan mealsPlan);
     @Delete

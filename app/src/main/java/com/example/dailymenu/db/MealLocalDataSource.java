@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.lifecycle.LiveData;
 
 import com.example.dailymenu.Model.Meal;
+import com.example.dailymenu.Model.MealsFav;
 import com.example.dailymenu.Model.MealsPlan;
 
 import java.util.List;
@@ -34,15 +35,15 @@ public class MealLocalDataSource {
         }
         return mealLocalDataSource;
     }
-    public Observable<List<Meal>> getData()
+    public Observable<List<MealsFav>> getData(String userId)
     {
-        return dao.favMeals();
+        return dao.favMeals(userId);
     }
-    public Completable delete(Meal meal)
+    public Completable delete(MealsFav meal)
     {
         return dao.deleteMeal(meal);
     }
-    public Completable add(Meal meal)
+    public Completable add(MealsFav meal)
     {
         return dao.addMeal(meal);
     }
@@ -54,12 +55,12 @@ public class MealLocalDataSource {
     {
         return plansDAO.deletePlanedMeal(meal);
     }
-    public Observable<List<MealsPlan>> getAllPlanByDate(String date)
+    public Observable<List<MealsPlan>> getAllPlanByDate(String date , String userId)
     {
-        return plansDAO.PlanedMeals(date);
+        return plansDAO.PlanedMeals(date , userId);
     }
-    public Observable<Integer> isFavMeal(String id)
+    public Observable<Integer> isFavMeal(String id , String userId)
     {
-        return dao.isMealIsFav(id);
+        return dao.isMealIsFav(id , userId);
     }
 }

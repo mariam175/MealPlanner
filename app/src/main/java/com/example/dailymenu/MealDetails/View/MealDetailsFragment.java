@@ -21,7 +21,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.dailymenu.MealDetails.Presenter.MealDetailsPresenter;
+import com.example.dailymenu.Model.MealsFav;
 import com.example.dailymenu.Model.MealsPlan;
+import com.example.dailymenu.Model.User;
 import com.example.dailymenu.Network.MealRemoteDataSource;
 import com.example.dailymenu.Network.MealsServices;
 import com.example.dailymenu.Model.IngridentItem;
@@ -29,6 +31,7 @@ import com.example.dailymenu.Model.Meal;
 import com.example.dailymenu.Model.MealsResponse;
 import com.example.dailymenu.Network.Repositry;
 import com.example.dailymenu.R;
+import com.example.dailymenu.Utils.UserSharedPrefrence;
 import com.example.dailymenu.db.MealLocalDataSource;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
@@ -65,6 +68,7 @@ public class MealDetailsFragment extends Fragment {
     boolean isFav;
     boolean logged;
     String date = null;
+    User user;
     private static final String TAG = "MealDetailsFragment";
     public MealDetailsFragment() {
         // Required empty public constructor
@@ -104,7 +108,7 @@ public class MealDetailsFragment extends Fragment {
          logged = isLogged.getBoolean("isLogin" , false);
 
         presenter.getMealById(id);
-        presenter.isFavMeal(id);
+        presenter.isFavMeal(id , UserSharedPrefrence.getUserId(requireContext()));
         if (meal != null)
         {
             updateUI();
@@ -117,11 +121,11 @@ public class MealDetailsFragment extends Fragment {
               {
                   if (!isFav)
                   {
-                      presenter.addToFav(meal);
+                      presenter.addToFav(new MealsFav(meal.getIdMeal() ,  UserSharedPrefrence.getUserId(requireContext()), meal.getStrMeal() , meal.getStrMealThumb()));
                       fav.setImageResource(R.drawable.baseline_favorite_24);
                   }
                   else {
-                      presenter.removeFromFav(meal);
+                      presenter.removeFromFav(new MealsFav(meal.getIdMeal(), UserSharedPrefrence.getUserId(requireContext()), meal.getStrMeal(), meal.getStrMealThumb()));
                       fav.setImageResource(R.drawable.favorite);
                   }
               }
@@ -145,7 +149,7 @@ public class MealDetailsFragment extends Fragment {
                         public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                             date = String.valueOf(i) + "/" + String.valueOf(i1 + 1) + "/" + String.valueOf(i2);
                             Log.i(TAG, "onDateSet: " + date);
-                            presenter.addMealToPlan(new MealsPlan(id , meal.getStrMeal() , meal.getStrMealThumb() , date));
+                            presenter.addMealToPlan(new MealsPlan(id , UserSharedPrefrence.getUserId(requireContext()), meal.getStrMeal() , meal.getStrMealThumb() , date));
                             Toast.makeText(getContext() , "added to plan" , Toast.LENGTH_SHORT).show();
                         }
                     } , year , month , day);
