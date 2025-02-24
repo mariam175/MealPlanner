@@ -134,4 +134,8 @@ public class Repositry {
     public void singnupWithEmailAndPassword(String email , String pass , AuthResonse resonse){
         firebase.singnupWithEmailAndPassword(email, pass, resonse);
     }
+    public void logout()
+    {
+        firebase.logout();
+    }
 }

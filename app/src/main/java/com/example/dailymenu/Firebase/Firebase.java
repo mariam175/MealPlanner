@@ -61,6 +61,10 @@ public class Firebase {
                    }
                 });
     }
+    public void logout()
+    {
+        FirebaseAuth.getInstance().signOut();
+    }
     public void singnupWithEmailAndPassword(String email , String pass , AuthResonse resonse)
     {
         auth.createUserWithEmailAndPassword(email, pass)
