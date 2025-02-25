@@ -58,7 +58,6 @@ public class FavMealsRecycleView extends RecyclerView.Adapter<FavMealsViewHolder
 //                Intent intent = new Intent(context , MealDetails.class);
 //                intent.putExtra("meal" ,current.getIdMeal());
 //                context.startActivity(intent);
-                Navigation.findNavController(view).popBackStack(R.id.mealDetailsFragment, true);
                 FavouritesFragmentDirections.ActionFavouritesFragmentToMealDetailsFragment action =
                         FavouritesFragmentDirections.actionFavouritesFragmentToMealDetailsFragment(current.getMealId());
 

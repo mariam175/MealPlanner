@@ -22,7 +22,15 @@
                 app:lottie_rawRes="@raw/networklost"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"/>
-
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottie_loading"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                app:lottie_rawRes="@raw/loading"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                android:visibility="gone"/>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/search_layout"
             android:layout_width="match_parent"

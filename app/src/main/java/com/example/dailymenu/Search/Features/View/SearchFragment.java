@@ -21,11 +21,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.example.dailymenu.Area.OnAreaClick;
-import com.example.dailymenu.Ingrediants.AllIngrediantsRecyclerView;
-import com.example.dailymenu.Area.AreaRecycleView;
-import com.example.dailymenu.Catigory.CatigoriesRecycleView;
-import com.example.dailymenu.Home.View.HomeFragment;
+import com.example.dailymenu.Area.View.OnAreaClick;
+import com.example.dailymenu.Catigory.View.OnCategoryClick;
+import com.example.dailymenu.Ingrediants.View.AllIngrediantsRecyclerView;
+import com.example.dailymenu.Area.View.AreaRecycleView;
+import com.example.dailymenu.Catigory.View.CatigoriesRecycleView;
+import com.example.dailymenu.Ingrediants.View.OnIngrediantClick;
 import com.example.dailymenu.Model.Area;
 import com.example.dailymenu.Model.Catigory;
 import com.example.dailymenu.Model.Ingredient;
@@ -39,14 +40,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.reactivex.rxjava3.core.Observable;
 
-
-public class SearchFragment extends Fragment implements OnAreaClick {
+public class SearchFragment extends Fragment implements OnAreaClick  , OnIngrediantClick , OnCategoryClick {
 
     List<Catigory> catigories;
     List<Area> areas;
@@ -55,14 +53,13 @@ public class SearchFragment extends Fragment implements OnAreaClick {
     String checked = "";
     RecyclerView recyclerView;
     EditText search;
-    String fragmentName = "searchFragment";
     AllIngrediantsRecyclerView ingredientRecycleView;
     CatigoriesRecycleView catigoriesRecycleView;
     NestedScrollView scrollView;
     AreaRecycleView areaRecycleView;
     BottomNavigationView bottomNav;
     SearchPresenter presenter;
-    LottieAnimationView network;
+    LottieAnimationView network , loading;
     View con;
 
     public SearchFragment() {
@@ -94,6 +91,7 @@ public class SearchFragment extends Fragment implements OnAreaClick {
         bottomNav = view.findViewById(R.id.bottom_nav);
         con = view.findViewById(R.id.search_layout);
         network = view.findViewById(R.id.lottie_lostNetwork);
+        loading = view.findViewById(R.id.lottie_loading);
         if (!Network.isNetworkAvailable(requireContext())) {
 
             network.setVisibility(View.VISIBLE);
@@ -105,13 +103,13 @@ public class SearchFragment extends Fragment implements OnAreaClick {
             network.setVisibility(View.GONE);
             con.setVisibility(View.VISIBLE);
         }
+        loading.setVisibility(View.VISIBLE);
         presenter = new SearchPresenter(this ,
                 Repositry.getInstance(MealRemoteDataSource.getInstance() ,
                         MealLocalDataSource.getInstance(getContext())));
         presenter.getCatigories();
         presenter.getArea();
         presenter.getIngrediants();
-
         for(int i = 0; i < chips.getChildCount() ; i++)
         {
             Chip chip = (Chip) chips.getChildAt(i);
@@ -163,34 +161,26 @@ public class SearchFragment extends Fragment implements OnAreaClick {
         });
     }
     private void updateRecyclerView() {
+
+        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 3));
+
         if (checked.equals("Categories")) {
-            if (catigoriesRecycleView == null) {
-                catigoriesRecycleView = new CatigoriesRecycleView(requireContext(), catigories, getView(), fragmentName);
-                recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-                recyclerView.setAdapter(catigoriesRecycleView);
-            }
-            catigoriesRecycleView.setFilteredList(catigories);
-            catigoriesRecycleView.notifyDataSetChanged();
+            catigoriesRecycleView = new CatigoriesRecycleView(requireContext(), catigories, this);
+            recyclerView.setAdapter(catigoriesRecycleView);
+
         }
         else if (checked.equals("Areas")) {
-            if (areaRecycleView == null) {
-                areaRecycleView = new AreaRecycleView(requireContext(), areas, this);
-                recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-                recyclerView.setAdapter(areaRecycleView);
-            }
-            areaRecycleView.setFilteredList(areas);
-            areaRecycleView.notifyDataSetChanged();
+            areaRecycleView = new AreaRecycleView(requireContext(), areas, this);
+            recyclerView.setAdapter(areaRecycleView);
+
         }
         else if (checked.equals("Ingrediants")) {
-            if (ingredientRecycleView == null) {
-                ingredientRecycleView = new AllIngrediantsRecyclerView(requireContext(), ingredients, fragmentName);
-                recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-                recyclerView.setAdapter(ingredientRecycleView);
-            }
-            ingredientRecycleView.setFilteredList(ingredients);
-            ingredientRecycleView.notifyDataSetChanged();
+            ingredientRecycleView = new AllIngrediantsRecyclerView(requireContext(), ingredients, this);
+            recyclerView.setAdapter(ingredientRecycleView);
+
         }
     }
+
 
 
 
@@ -202,19 +192,35 @@ public class SearchFragment extends Fragment implements OnAreaClick {
         Navigation.findNavController(view).navigate(action);
     }
     public void setCategoriesList(List<Catigory> catigoriesList) {
+        loading.setVisibility(View.GONE);
         this.catigories = catigoriesList;
 
 
     }
 
     public void setAreaLis(List<Area> areasList) {
+        loading.setVisibility(View.GONE);
         this.areas = areasList ;
 
     }
 
     public void setIngrediantList(List<Ingredient> ingredientsList) {
+        loading.setVisibility(View.GONE);
         this.ingredients =  ingredientsList;
 
     }
 
+    @Override
+    public void onIngrediantClick(View view, String ingrediant) {
+        SearchFragmentDirections.ActionSearchFragmentToMealsFragment action =
+                SearchFragmentDirections.actionSearchFragmentToMealsFragment("ingrediant" , ingrediant);
+        Navigation.findNavController(view).navigate(action);
+    }
+
+    @Override
+    public void onCategoryClick(View view, String category) {
+        SearchFragmentDirections.ActionSearchFragmentToMealsFragment action =
+                SearchFragmentDirections.actionSearchFragmentToMealsFragment("catigory" , category);
+        Navigation.findNavController(view).navigate(action);
+    }
 }
