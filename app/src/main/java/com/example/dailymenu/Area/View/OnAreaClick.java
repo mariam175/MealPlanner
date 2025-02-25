@@ -1,4 +1,4 @@
-package com.example.dailymenu.Area;
+package com.example.dailymenu.Area.View;
 
 import android.view.View;
 

@@ -19,7 +19,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.dailymenu.MealDetails.Presenter.MealDetailsPresenter;
 import com.example.dailymenu.Model.MealsFav;
 import com.example.dailymenu.Model.MealsPlan;
@@ -31,6 +33,7 @@ import com.example.dailymenu.Model.Meal;
 import com.example.dailymenu.Model.MealsResponse;
 import com.example.dailymenu.Network.Repositry;
 import com.example.dailymenu.R;
+import com.example.dailymenu.Utils.Flags;
 import com.example.dailymenu.Utils.UserSharedPrefrence;
 import com.example.dailymenu.db.MealLocalDataSource;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -44,18 +47,12 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTube
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class MealDetailsFragment extends Fragment {
     TextView instr;
-    ImageView img;
+    ImageView img , area_img;
     String id;
     RecyclerView recyclerView;
     Meal meal;
@@ -68,7 +65,9 @@ public class MealDetailsFragment extends Fragment {
     boolean isFav;
     boolean logged;
     String date = null;
-    User user;
+    View content;
+
+    LottieAnimationView loading;
     private static final String TAG = "MealDetailsFragment";
     public MealDetailsFragment() {
         // Required empty public constructor
@@ -101,8 +100,13 @@ public class MealDetailsFragment extends Fragment {
         fav = view.findViewById(R.id.fab_addFav);
         plan = view.findViewById(R.id.fab_calender);
         youtubePlayerView = view.findViewById(R.id.youtube_player_view);
-
+        area_img = view.findViewById(R.id.iv_meal_area);
+        loading = view.findViewById(R.id.lottie_loading);
+        content = view.findViewById(R.id.details);
         id = MealDetailsFragmentArgs.fromBundle(getArguments()).getMealId();
+
+        loading.setVisibility(View.VISIBLE);
+        content.setVisibility(View.GONE);
         presenter = new MealDetailsPresenter(this , Repositry.getInstance(MealRemoteDataSource.getInstance() , MealLocalDataSource.getInstance(getContext())));
          isLogged = requireContext().getSharedPreferences("Logged" , Context.MODE_PRIVATE);
          logged = isLogged.getBoolean("isLogin" , false);
@@ -164,6 +168,8 @@ public class MealDetailsFragment extends Fragment {
     }
     public void setMeal(Meal meal)
     {
+        loading.setVisibility(View.GONE);
+        content.setVisibility(View.VISIBLE);
         this.meal = meal;
             updateUI();
 
@@ -173,7 +179,10 @@ public class MealDetailsFragment extends Fragment {
 
         instr.setText(meal.getStrInstructions());
         area.setText(meal.getStrArea());
-
+        Glide.with(getContext())
+                .applyDefaultRequestOptions(RequestOptions.circleCropTransform())
+                .load(Flags.flagsImg().getOrDefault(meal.getStrArea() , R.drawable.unknown))
+                .into(area_img);
         if (isFav)
         {
             fav.setImageResource(R.drawable.baseline_favorite_24);

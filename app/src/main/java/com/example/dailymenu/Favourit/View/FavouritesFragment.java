@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.dailymenu.Favourit.Presenter.FavouritePresenter;
 import com.example.dailymenu.Model.Meal;
 import com.example.dailymenu.Model.MealsFav;
@@ -31,6 +32,7 @@ public class FavouritesFragment extends Fragment {
     RecyclerView recyclerView;
     FavouritePresenter presenter;
     FavMealsRecycleView favMealsRecycleView;
+    LottieAnimationView empty;
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -55,6 +57,8 @@ public class FavouritesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.rv_favs);
+        empty = view.findViewById(R.id.lottie_empty);
+
         presenter = new FavouritePresenter(this , Repositry.getInstance(MealRemoteDataSource.getInstance() , MealLocalDataSource.getInstance(getContext())));
         favMealsRecycleView = new FavMealsRecycleView(getContext() , new ArrayList<>());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -64,8 +68,17 @@ public class FavouritesFragment extends Fragment {
     }
     public void setFavmeals(List<MealsFav>meals)
     {
-        favMealsRecycleView.setFavMeals(meals);
-        recyclerView.setAdapter(favMealsRecycleView);
-        favMealsRecycleView.notifyDataSetChanged();
+        if(meals.isEmpty())
+        {
+            empty.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }
+        else {
+            empty.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            favMealsRecycleView.setFavMeals(meals);
+            recyclerView.setAdapter(favMealsRecycleView);
+            favMealsRecycleView.notifyDataSetChanged();
+        }
     }
 }

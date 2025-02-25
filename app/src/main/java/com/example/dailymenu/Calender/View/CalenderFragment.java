@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.dailymenu.Calender.Presenter.CalenderPresenter;
 import com.example.dailymenu.Model.MealsPlan;
 import com.example.dailymenu.Model.User;
@@ -36,6 +37,7 @@ public class CalenderFragment extends Fragment implements OnPlanListener{
     String date;
     CalenderPresenter presenter;
     PlansRecyclerView plansRecyclerView;
+    LottieAnimationView empty;
     private static final String TAG = "CalenderFragment";
     Calendar calendar = Calendar.getInstance();
     int year = calendar.get(Calendar.YEAR);
@@ -66,6 +68,8 @@ public class CalenderFragment extends Fragment implements OnPlanListener{
         super.onViewCreated(view, savedInstanceState);
         calender = view.findViewById(R.id.calender);
         recyclerView = view.findViewById(R.id.rv_plans);
+        empty = view.findViewById(R.id.lottie_empty);
+
         todayDate = String.valueOf(year) + "/" + String.valueOf(month + 1) + "/" + String.valueOf(day);
         presenter = new CalenderPresenter(this , Repositry.getInstance(MealRemoteDataSource.getInstance() , MealLocalDataSource.getInstance(getContext())));
         plansRecyclerView = new PlansRecyclerView(new ArrayList<>() , getContext() , this);
@@ -93,8 +97,17 @@ public class CalenderFragment extends Fragment implements OnPlanListener{
         Navigation.findNavController(getView()).navigate(action);
     }
     public void getPlans(List<MealsPlan> mealsPlans) {
-        plansRecyclerView.setPlans(mealsPlans);
-        recyclerView.setAdapter(plansRecyclerView);
-        plansRecyclerView.notifyDataSetChanged();
+        if (mealsPlans.isEmpty())
+        {
+            empty.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }
+       else {
+            empty.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            plansRecyclerView.setPlans(mealsPlans);
+            recyclerView.setAdapter(plansRecyclerView);
+            plansRecyclerView.notifyDataSetChanged();
+        }
     }
 }

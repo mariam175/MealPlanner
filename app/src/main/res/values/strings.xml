@@ -24,4 +24,6 @@
     <string name="profile">Profile</string>
     <string name="steps">Steps</string>
     <string name="logout">LogOut</string>
+    <string name="favs">Your Favourits</string>
+    <string name="plans">Your Plans</string>
 </resources>

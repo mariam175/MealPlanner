@@ -1,4 +1,4 @@
-package com.example.dailymenu.Catigory;
+package com.example.dailymenu.Catigory.View;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -25,14 +25,12 @@ import java.util.List;
 public class CatigoriesRecycleView extends RecyclerView.Adapter<ViewHolder> {
     Context context;
     List<Catigory> catigories , filteredList;
-    View fragmentView;
-    String fragment;
+    OnCategoryClick listener;
 
-    public CatigoriesRecycleView(Context context, List<Catigory>  catigories , View fragmentView , String fragment) {
+    public CatigoriesRecycleView(Context context, List<Catigory>  catigories , OnCategoryClick listener) {
         this.context = context;
         this.catigories = catigories;
-        this.fragmentView = fragmentView;
-        this.fragment = fragment;
+        this.listener = listener;
         this.filteredList = new ArrayList<>(catigories);
     }
 
@@ -64,17 +62,7 @@ public class CatigoriesRecycleView extends RecyclerView.Adapter<ViewHolder> {
 //                intent.putExtra("Type" , "catigory");
 //                intent.putExtra("Catigory" , currentCatigory.getStrCategory());
 //                context.startActivity(intent);
-                if (fragment.equals("homeFragment"))
-                {
-                    HomeFragmentDirections.ActionHomeFragmentToMealsFragment action =
-                            HomeFragmentDirections.actionHomeFragmentToMealsFragment("catigory" , currentCatigory.getStrCategory());
-                    Navigation.findNavController(fragmentView).navigate(action);
-                }
-                else {
-                    SearchFragmentDirections.ActionSearchFragmentToMealsFragment action =
-                            SearchFragmentDirections.actionSearchFragmentToMealsFragment("catigory" , currentCatigory.getStrCategory());
-                    Navigation.findNavController(fragmentView).navigate(action);
-                }
+                listener.onCategoryClick(view , currentCatigory.getStrCategory());
             }
         });
     }

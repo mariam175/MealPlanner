@@ -1,4 +1,4 @@
-package com.example.dailymenu.Ingrediants;
+package com.example.dailymenu.Ingrediants.View;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -27,11 +27,11 @@ public class AllIngrediantsRecyclerView extends RecyclerView.Adapter<allIngredia
     Context context;
     List<Ingredient> ingredients , filteredList;
     String fragment;
-
-    public AllIngrediantsRecyclerView(Context context, List<Ingredient> ingredients , String fragment) {
+    OnIngrediantClick lister;
+    public AllIngrediantsRecyclerView(Context context, List<Ingredient> ingredients , OnIngrediantClick lister) {
         this.context = context;
         this.ingredients = ingredients;
-        this.fragment = fragment;
+        this.lister = lister;
         this.filteredList = new ArrayList<>(ingredients);
     }
 
@@ -63,17 +63,7 @@ public class AllIngrediantsRecyclerView extends RecyclerView.Adapter<allIngredia
 //                intent.putExtra("Type" , "ingrediant");
 //                intent.putExtra("Ingrediant" , current.getStrIngredient());
 //                context.startActivity(intent);
-               if (fragment.equals("homeFragment"))
-               {
-                   HomeFragmentDirections.ActionHomeFragmentToMealsFragment action =
-                           HomeFragmentDirections.actionHomeFragmentToMealsFragment("ingrediant" , current.getStrIngredient());
-                   Navigation.findNavController(view).navigate(action);
-               }
-               else {
-                   SearchFragmentDirections.ActionSearchFragmentToMealsFragment action =
-                           SearchFragmentDirections.actionSearchFragmentToMealsFragment("ingrediant" , current.getStrIngredient());
-                   Navigation.findNavController(view).navigate(action);
-               }
+                lister.onIngrediantClick(view , current.getStrIngredient());
             }
         });
     }

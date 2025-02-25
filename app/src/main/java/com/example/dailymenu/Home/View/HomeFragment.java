@@ -19,21 +19,18 @@ import android.widget.Toast;
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.dailymenu.Area.OnAreaClick;
+import com.example.dailymenu.Area.View.OnAreaClick;
+import com.example.dailymenu.Catigory.View.OnCategoryClick;
 import com.example.dailymenu.Home.Presenter.HomePresenter;
-import com.example.dailymenu.Ingrediants.AllIngrediantsRecyclerView;
-import com.example.dailymenu.Area.AreaRecycleView;
-import com.example.dailymenu.Catigory.CatigoriesRecycleView;
+import com.example.dailymenu.Ingrediants.View.AllIngrediantsRecyclerView;
+import com.example.dailymenu.Area.View.AreaRecycleView;
+import com.example.dailymenu.Catigory.View.CatigoriesRecycleView;
+import com.example.dailymenu.Ingrediants.View.OnIngrediantClick;
 import com.example.dailymenu.Network.MealRemoteDataSource;
-import com.example.dailymenu.Network.MealsServices;
 import com.example.dailymenu.Model.Area;
-import com.example.dailymenu.Model.AreaResponse;
 import com.example.dailymenu.Model.Catigory;
-import com.example.dailymenu.Model.CatigoryResponse;
-import com.example.dailymenu.Model.IngrediantResponse;
 import com.example.dailymenu.Model.Ingredient;
 import com.example.dailymenu.Model.Meal;
-import com.example.dailymenu.Model.MealsResponse;
 import com.example.dailymenu.Network.Repositry;
 import com.example.dailymenu.R;
 import com.example.dailymenu.Utils.Network;
@@ -41,14 +38,8 @@ import com.example.dailymenu.db.MealLocalDataSource;
 
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-
-public class HomeFragment extends Fragment implements OnAreaClick {
+public class HomeFragment extends Fragment implements OnAreaClick , OnIngrediantClick , OnCategoryClick {
 
     TextView mealName;
     ImageView mealImage;
@@ -60,7 +51,7 @@ public class HomeFragment extends Fragment implements OnAreaClick {
     HomePresenter presenter;
 
     RecyclerView recyclerView , areaRecycler , ingrediantRecycler;
-    LottieAnimationView network;
+    LottieAnimationView network , loading;
     View con;
     public HomeFragment() {
         // Required empty public constructor
@@ -91,6 +82,8 @@ public class HomeFragment extends Fragment implements OnAreaClick {
         ingrediantRecycler = view.findViewById(R.id.rv_ing);
         con = view.findViewById(R.id.homeView);
         network = view.findViewById(R.id.lottie_lostNetwork);
+        loading = view.findViewById(R.id.lottie_loading);
+
         if (!Network.isNetworkAvailable(requireContext())) {
 
             network.setVisibility(View.VISIBLE);
@@ -102,7 +95,8 @@ public class HomeFragment extends Fragment implements OnAreaClick {
             network.setVisibility(View.GONE);
             con.setVisibility(View.VISIBLE);
         }
-
+        loading.setVisibility(View.VISIBLE);
+        con.setVisibility(View.GONE);
         presenter = new HomePresenter(this ,
                 Repositry.getInstance(MealRemoteDataSource.getInstance() ,
                         MealLocalDataSource.getInstance(requireContext())));
@@ -132,6 +126,8 @@ public class HomeFragment extends Fragment implements OnAreaClick {
 
     public void setMeal(Meal meal) {
         this.meal = meal;
+        con.setVisibility(View.VISIBLE);
+        loading.setVisibility(View.GONE);
         mealName.setText(meal.getStrMeal());
         Glide.with(getContext()).load(meal.getStrMealThumb())
                 .apply(new RequestOptions().override(300 , 300))
@@ -141,7 +137,7 @@ public class HomeFragment extends Fragment implements OnAreaClick {
     {
         this.catigoriesList = catigories;
         List<Catigory> limitedList = catigoriesList.subList(0, 6);
-        CatigoriesRecycleView catigoriesRecycleView = new CatigoriesRecycleView(requireContext() , limitedList, getView() , fragment);
+        CatigoriesRecycleView catigoriesRecycleView = new CatigoriesRecycleView(requireContext() , limitedList, this);
         recyclerView.setAdapter(catigoriesRecycleView);
     }
     public void setAreaLis(List<Area>areas)
@@ -155,7 +151,21 @@ public class HomeFragment extends Fragment implements OnAreaClick {
     {
         this.ingredients = ingredientsList;
         List<Ingredient> limitedList = ingredients.subList(0, 6);
-        AllIngrediantsRecyclerView allIngrediantsRecyclerView = new AllIngrediantsRecyclerView(requireContext() , limitedList, fragment);
+        AllIngrediantsRecyclerView allIngrediantsRecyclerView = new AllIngrediantsRecyclerView(requireContext() , limitedList , this);
         ingrediantRecycler.setAdapter(allIngrediantsRecyclerView);
+    }
+
+    @Override
+    public void onIngrediantClick(View view, String ingrediant) {
+        HomeFragmentDirections.ActionHomeFragmentToMealsFragment action =
+                HomeFragmentDirections.actionHomeFragmentToMealsFragment("ingrediant" , ingrediant);
+        Navigation.findNavController(view).navigate(action);
+    }
+
+    @Override
+    public void onCategoryClick(View view, String category) {
+        HomeFragmentDirections.ActionHomeFragmentToMealsFragment action =
+                HomeFragmentDirections.actionHomeFragmentToMealsFragment("catigory" , category);
+        Navigation.findNavController(view).navigate(action);
     }
 }
