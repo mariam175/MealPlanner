@@ -26,4 +26,5 @@
     <string name="logout">LogOut</string>
     <string name="favs">Your Favourits</string>
     <string name="plans">Your Plans</string>
+    <string name="Close">Close</string>
 </resources>

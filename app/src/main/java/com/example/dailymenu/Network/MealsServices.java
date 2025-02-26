@@ -1,13 +1,12 @@
 package com.example.dailymenu.Network;
 
-import com.example.dailymenu.Model.AreaResponse;
-import com.example.dailymenu.Model.CatigoryResponse;
-import com.example.dailymenu.Model.IngrediantResponse;
-import com.example.dailymenu.Model.MealsFilterResponse;
-import com.example.dailymenu.Model.MealsResponse;
+import com.example.dailymenu.Model.Response.AreaResponse;
+import com.example.dailymenu.Model.Response.CatigoryResponse;
+import com.example.dailymenu.Model.Response.IngrediantResponse;
+import com.example.dailymenu.Model.Response.MealsFilterResponse;
+import com.example.dailymenu.Model.Response.MealsResponse;
 
 import io.reactivex.rxjava3.core.Single;
-import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 

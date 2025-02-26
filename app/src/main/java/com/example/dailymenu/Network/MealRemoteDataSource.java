@@ -1,23 +1,13 @@
 package com.example.dailymenu.Network;
 
-import android.util.Log;
-
-import com.bumptech.glide.Glide;
-import com.example.dailymenu.Model.AreaResponse;
-import com.example.dailymenu.Model.Catigory;
-import com.example.dailymenu.Model.CatigoryResponse;
-import com.example.dailymenu.Model.IngrediantResponse;
-import com.example.dailymenu.Model.Meal;
-import com.example.dailymenu.Model.MealsFilterResponse;
-import com.example.dailymenu.Model.MealsResponse;
-
-import java.util.List;
+import com.example.dailymenu.Model.Response.AreaResponse;
+import com.example.dailymenu.Model.Response.CatigoryResponse;
+import com.example.dailymenu.Model.Response.IngrediantResponse;
+import com.example.dailymenu.Model.Response.MealsFilterResponse;
+import com.example.dailymenu.Model.Response.MealsResponse;
 
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
 import io.reactivex.rxjava3.core.Single;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 

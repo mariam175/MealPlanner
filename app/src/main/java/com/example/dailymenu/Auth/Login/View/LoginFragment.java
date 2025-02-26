@@ -21,16 +21,16 @@ import android.widget.Toast;
 import com.example.dailymenu.Auth.Login.Presenter.LoginPresenter;
 import com.example.dailymenu.Firebase.AuthResonse;
 import com.example.dailymenu.Network.MealRemoteDataSource;
-import com.example.dailymenu.Network.Repositry;
+import com.example.dailymenu.Model.Repositry.Repositry;
 import com.example.dailymenu.R;
 import com.example.dailymenu.Utils.GoogleOptions;
 import com.example.dailymenu.db.MealLocalDataSource;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class LoginFragment extends Fragment implements AuthResonse {
 
@@ -43,6 +43,7 @@ public class LoginFragment extends Fragment implements AuthResonse {
     LoginPresenter loginPresenter;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+    TextInputLayout emailTextLayout , passTextLayout;
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -64,6 +65,8 @@ public class LoginFragment extends Fragment implements AuthResonse {
 
         email = view.findViewById(R.id.et_log_email);
         pass = view.findViewById(R.id.et_log_pass);
+
+
         login = view.findViewById(R.id.btn_login);
         create_acc = view.findViewById(R.id.tv_create_account);
         google = view.findViewById(R.id.btn_go);

@@ -2,10 +2,9 @@ package com.example.dailymenu.Auth.Signup.Presenter;
 
 import android.content.Context;
 
-import com.example.dailymenu.Auth.Login.View.LoginFragment;
 import com.example.dailymenu.Auth.Signup.View.SignupFragment;
 import com.example.dailymenu.Firebase.AuthResonse;
-import com.example.dailymenu.Network.Repositry;
+import com.example.dailymenu.Model.Repositry.Repositry;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 public class SignupPresenter {

@@ -3,7 +3,7 @@ package com.example.dailymenu.Utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.dailymenu.Model.User;
+import com.example.dailymenu.Model.DTO.User;
 
 public class UserSharedPrefrence {
     static SharedPreferences sharedPreferences;
