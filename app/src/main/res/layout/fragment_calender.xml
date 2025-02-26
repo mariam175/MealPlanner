@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Calender.View.CalenderFragment" >
+    tools:context=".UI.Calender.View.CalenderFragment" >
 
     <TextView
         android:id="@+id/textView8"

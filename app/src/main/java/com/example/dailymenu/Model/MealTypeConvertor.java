@@ -2,6 +2,7 @@ package com.example.dailymenu.Model;
 
 import androidx.room.TypeConverter;
 
+import com.example.dailymenu.Model.DTO.Meal;
 import com.google.gson.Gson;
 
 public class MealTypeConvertor {

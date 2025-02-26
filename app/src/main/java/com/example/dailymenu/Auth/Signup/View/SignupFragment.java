@@ -1,6 +1,5 @@
 package com.example.dailymenu.Auth.Signup.View;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -21,7 +20,7 @@ import android.widget.Toast;
 import com.example.dailymenu.Auth.Signup.Presenter.SignupPresenter;
 import com.example.dailymenu.Firebase.AuthResonse;
 import com.example.dailymenu.Network.MealRemoteDataSource;
-import com.example.dailymenu.Network.Repositry;
+import com.example.dailymenu.Model.Repositry.Repositry;
 import com.example.dailymenu.R;
 import com.example.dailymenu.Utils.GoogleOptions;
 import com.example.dailymenu.db.MealLocalDataSource;
@@ -29,12 +28,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GoogleAuthProvider;
 
 public class SignupFragment extends Fragment implements AuthResonse {
 

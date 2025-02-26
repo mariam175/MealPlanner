@@ -58,4 +58,5 @@ dependencies {
     implementation("com.github.akarnokd:rxjava3-retrofit-adapter:3.0.0")
     implementation("androidx.room:room-rxjava3:2.6.1")
     implementation ("com.airbnb.android:lottie:3.4.0")
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
 }

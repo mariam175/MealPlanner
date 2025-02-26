@@ -6,12 +6,11 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.example.dailymenu.Model.Meal;
-import com.example.dailymenu.Model.MealsFav;
-import com.example.dailymenu.Model.MealsPlan;
+import com.example.dailymenu.Model.DTO.MealsFav;
+import com.example.dailymenu.Model.DTO.MealsPlan;
 
 
-@Database(entities = {MealsFav.class , MealsPlan.class} , version = 3)
+@Database(entities = {MealsFav.class , MealsPlan.class} , version = 4)
 public abstract class FavMealsDataBase extends RoomDatabase {
     private static FavMealsDataBase favMealsDataBase = null;
     public abstract DAO dao();
@@ -19,7 +18,7 @@ public abstract class FavMealsDataBase extends RoomDatabase {
     public static FavMealsDataBase getInstance(Context context)
     {
        if (favMealsDataBase == null){
-           favMealsDataBase = Room.databaseBuilder(context.getApplicationContext() , FavMealsDataBase.class , "meal")
+           favMealsDataBase = Room.databaseBuilder(context.getApplicationContext() , FavMealsDataBase.class , "mealdb")
                    .build();
        }
        return favMealsDataBase;

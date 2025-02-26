@@ -2,17 +2,14 @@ package com.example.dailymenu.Firebase;
 
 import static android.app.PendingIntent.getActivity;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-
 import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.dailymenu.Model.Meal;
-import com.example.dailymenu.Model.MealsFav;
-import com.example.dailymenu.Model.MealsPlan;
-import com.example.dailymenu.Model.User;
+import com.example.dailymenu.Model.DTO.MealsFav;
+import com.example.dailymenu.Model.DTO.MealsPlan;
+import com.example.dailymenu.Model.DTO.User;
 import com.example.dailymenu.Utils.UserSharedPrefrence;
 import com.example.dailymenu.db.MealLocalDataSource;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
